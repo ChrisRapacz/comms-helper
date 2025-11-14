@@ -92,16 +92,32 @@ ssh user@your-vps-ip
 cd /path/to/comms-helper
 ```
 
-3. **Skonfiguruj zmienne środowiskowe**
+3. **Uruchom z Docker Compose przekazując API key**
+
+**Opcja A: Bezpośrednio w komendzie (ZALECANE)**
 ```bash
-nano .env
-# Dodaj ANTHROPIC_API_KEY
+ANTHROPIC_API_KEY=sk-ant-your-key docker-compose up -d --build
 ```
 
-4. **Uruchom z Docker Compose**
+**Opcja B: Export jako zmienna środowiskowa sesji**
 ```bash
+export ANTHROPIC_API_KEY=sk-ant-your-key
 docker-compose up -d --build
 ```
+
+**Opcja C: Permanentna zmienna systemowa**
+```bash
+# Dodaj do ~/.bashrc (tylko dla użytkownika)
+echo 'export ANTHROPIC_API_KEY=sk-ant-your-key' >> ~/.bashrc
+source ~/.bashrc
+docker-compose up -d --build
+```
+
+**⚠️ Bezpieczeństwo:**
+- NIE commituj pliku `.env` z kluczem API do repozytorium
+- `.env` jest już w `.gitignore`
+- Klucz API jest dostępny TYLKO w backend (API routes), nigdy w frontend
+- Używaj zmiennych środowiskowych runtime zamiast plików
 
 5. **Konfiguracja reverse proxy (opcjonalnie)**
 
@@ -202,6 +218,37 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
    - Wybierz różnych pracowników
    - Pokaż jak ta sama wiadomość wygląda w różnych wersjach
    - Zwróć uwagę na oznaczenia "Dopasowano do Twoich preferencji"
+
+## 🔒 Bezpieczeństwo API Key
+
+### Dlaczego Twój klucz jest bezpieczny?
+
+W Next.js **TYLKO** zmienne z prefiktem `NEXT_PUBLIC_` są dostępne w frontend:
+
+✅ **BEZPIECZNE** (backend only):
+```env
+ANTHROPIC_API_KEY=sk-ant-xxx  # ✅ Dostępny TYLKO w API routes
+```
+
+❌ **NIEBEZPIECZNE** (widoczne w frontend):
+```env
+NEXT_PUBLIC_ANTHROPIC_API_KEY=sk-ant-xxx  # ❌ NIGDY tego nie rób!
+```
+
+### Gdzie jest używany klucz?
+
+Klucz `ANTHROPIC_API_KEY` jest używany **TYLKO** w:
+- `/app/api/generate-variants/route.ts` (API route = server-side)
+
+Frontend **NIGDY** nie ma dostępu do tej zmiennej i nie może jej odczytać.
+
+### Best Practices
+
+1. ✅ NIE commituj `.env` do Git (jest w `.gitignore`)
+2. ✅ Przekazuj klucz przez zmienne środowiskowe runtime
+3. ✅ Używaj różnych kluczy dla dev/staging/production
+4. ✅ Regularnie rotuj klucze API
+5. ✅ Monitoruj użycie API w Anthropic Console
 
 ## 🛠️ Troubleshooting
 

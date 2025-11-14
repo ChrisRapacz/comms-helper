@@ -9,6 +9,8 @@ services:
       - "3000:3000"
     environment:
       - NODE_ENV=production
+      # ANTHROPIC_API_KEY will be read from host environment variable
+      # Pass it during deployment: ANTHROPIC_API_KEY=sk-ant-xxx docker-compose up -d
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
     restart: unless-stopped
     volumes:
