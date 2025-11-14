@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import OpenAI from 'openai';
+import Anthropic from '@anthropic-ai/sdk';
 import { MESSAGE_VARIANTS } from '@/lib/variants';
 
 export async function POST(request: NextRequest) {
@@ -13,17 +13,18 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Initialize OpenAI client
-    const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    });
-
-    if (!process.env.OPENAI_API_KEY) {
+    // Check for API key
+    if (!process.env.ANTHROPIC_API_KEY) {
       return NextResponse.json(
-        { error: 'OpenAI API key is not configured' },
+        { error: 'Anthropic API key is not configured' },
         { status: 500 }
       );
     }
+
+    // Initialize Anthropic client
+    const anthropic = new Anthropic({
+      apiKey: process.env.ANTHROPIC_API_KEY,
+    });
 
     // First, generate the base content
     const basePrompt = `Jesteś ekspertem od komunikacji wewnętrznej w firmie. Na podstawie poniższych kluczowych informacji napisz profesjonalny komunikat firmowy w języku polskim.
@@ -39,27 +40,33 @@ Wytyczne:
 
 Napisz tylko treść komunikatu, bez tytułu czy nagłówków.`;
 
-    const baseResponse = await openai.chat.completions.create({
-      model: 'gpt-4',
+    const baseResponse = await anthropic.messages.create({
+      model: 'claude-sonnet-4-5-20250929',
+      max_tokens: 1024,
       messages: [{ role: 'user', content: basePrompt }],
-      temperature: 0.7,
     });
 
-    const baseContent = baseResponse.choices[0].message.content || '';
+    const baseContent = baseResponse.content[0].type === 'text'
+      ? baseResponse.content[0].text
+      : '';
 
     // Generate variants in parallel
     const variantPromises = MESSAGE_VARIANTS.map(async (variant) => {
       const variantPrompt = getVariantPrompt(variant.id, baseContent);
 
-      const response = await openai.chat.completions.create({
-        model: 'gpt-4',
+      const response = await anthropic.messages.create({
+        model: 'claude-sonnet-4-5-20250929',
+        max_tokens: 1024,
         messages: [{ role: 'user', content: variantPrompt }],
-        temperature: 0.7,
       });
+
+      const content = response.content[0].type === 'text'
+        ? response.content[0].text
+        : baseContent;
 
       return {
         variant: variant.id,
-        content: response.choices[0].message.content || baseContent,
+        content,
       };
     });
 

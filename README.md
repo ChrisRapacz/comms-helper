@@ -23,7 +23,7 @@ Aplikacja demonstracyjna pokazująca personalizację komunikacji firmowej z wyko
 ### Wymagania
 - Node.js 20+
 - Docker & Docker Compose (do deploymentu)
-- OpenAI API Key
+- Anthropic API Key (Claude)
 
 ### Lokalne uruchomienie
 
@@ -41,7 +41,7 @@ npm install
 3. **Skonfiguruj zmienne środowiskowe**
 ```bash
 cp .env.example .env
-# Edytuj .env i dodaj swój OPENAI_API_KEY
+# Edytuj .env i dodaj swój ANTHROPIC_API_KEY
 ```
 
 4. **Uruchom w trybie deweloperskim**
@@ -58,7 +58,7 @@ Aplikacja będzie dostępna pod adresem: http://localhost:3000
 1. **Skonfiguruj zmienne środowiskowe**
 ```bash
 cp .env.example .env
-# Edytuj .env i dodaj swój OPENAI_API_KEY
+# Edytuj .env i dodaj swój ANTHROPIC_API_KEY
 ```
 
 2. **Zbuduj i uruchom kontener**
@@ -95,7 +95,7 @@ cd /path/to/comms-helper
 3. **Skonfiguruj zmienne środowiskowe**
 ```bash
 nano .env
-# Dodaj OPENAI_API_KEY
+# Dodaj ANTHROPIC_API_KEY
 ```
 
 4. **Uruchom z Docker Compose**
@@ -181,7 +181,7 @@ Każdy pracownik ma:
 ### Zmienne środowiskowe (.env)
 
 ```env
-OPENAI_API_KEY=sk-...your-key-here
+ANTHROPIC_API_KEY=sk-ant-...your-key-here
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
@@ -206,8 +206,8 @@ NEXT_PUBLIC_APP_URL=http://localhost:3000
 ## 🛠️ Troubleshooting
 
 ### Problem: Błąd przy generowaniu wariantów
-- Sprawdź czy `OPENAI_API_KEY` jest poprawnie ustawiony w `.env`
-- Sprawdź limity API w OpenAI dashboard
+- Sprawdź czy `ANTHROPIC_API_KEY` jest poprawnie ustawiony w `.env`
+- Sprawdź limity API w Anthropic Console (console.anthropic.com)
 
 ### Problem: Aplikacja nie startuje w Docker
 - Sprawdź logi: `docker-compose logs -f`
