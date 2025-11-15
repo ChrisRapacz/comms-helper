@@ -10,6 +10,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getVariantConfig } from '@/lib/variants';
 import { useParams } from 'next/navigation';
+import { DEFAULT_PROMPTS } from '@/lib/prompts';
 
 export default function EmployeeInboxPage() {
   const params = useParams();
@@ -171,6 +172,18 @@ export default function EmployeeInboxPage() {
               <div className="bg-gray-50 rounded-lg p-4 space-y-2 text-sm text-gray-700">
                 <p><strong>Pokolenie:</strong> {employee.generation}</p>
                 <p><strong>Opis preferencji:</strong> {employee.description}</p>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <h4 className="font-semibold text-gray-900">🤖 Instrukcje AI dla Twojego wariantu:</h4>
+              <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4">
+                <p className="text-sm text-indigo-900 mb-2 font-semibold">
+                  Następujący prompt jest używany przez AI do generowania wiadomości w Twoim stylu:
+                </p>
+                <div className="bg-white rounded p-4 text-sm text-gray-700 font-mono whitespace-pre-wrap border border-indigo-100 max-h-48 overflow-y-auto">
+                  {DEFAULT_PROMPTS[employee.preferredVariant]}
+                </div>
               </div>
             </div>
 
