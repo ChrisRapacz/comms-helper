@@ -478,12 +478,22 @@ export default function AdminPage() {
                 Wprowadź kluczowe informacje, a AI wygeneruje 15 spersonalizowanych wariantów komunikatu.
               </p>
             </div>
-            <button
-              onClick={() => setShowPromptEditor(!showPromptEditor)}
-              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-sm font-semibold"
-            >
-              ⚙️ Edytuj prompty AI
-            </button>
+            <div className="flex gap-2">
+              <button
+                onClick={() => setShowPromptEditor(!showPromptEditor)}
+                className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-sm font-semibold"
+              >
+                ⚙️ Edytuj prompty AI
+              </button>
+              <button
+                onClick={handleDeleteAll}
+                disabled={loading}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Usuwa wszystkie wysłane wiadomości ze wszystkich skrzynek"
+              >
+                🗑️ Wyczyść
+              </button>
+            </div>
           </div>
 
           {error && (
