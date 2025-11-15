@@ -42,7 +42,7 @@ export const useInboxStore = create<InboxState>((set, get) => {
           const existingIds = new Set(existingEmails.map(e => e.id));
 
           // Only add emails that don't already exist
-          const newEmails = serverEmails.filter(email => !existingIds.has(email.id));
+          const newEmails = serverEmails.filter((email: Email) => !existingIds.has(email.id));
 
           // Prepend new server emails to existing emails
           mergedEmails[employeeId] = [...newEmails, ...existingEmails];
