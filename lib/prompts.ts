@@ -33,6 +33,8 @@ export const DEFAULT_PROMPTS: Record<MessageVariant, string> = {
   english: 'Translate the following message to English. Maintain a professional business tone suitable for corporate communication:\n\n{baseContent}',
 
   staropolski: 'Przepisz następujący komunikat w imitacji staropolszczyzny (XVI-XVII wiek). KONIECZNIE zacznij od "Mocium Panie," i używaj archaicznych form, takich jak: "iżby", "acz", "niezmiernie", "raczyć", "pojąć", itd. Zachowaj profesjonalny charakter komunikacji firmowej, ale w staropolskim stylu:\n\n{baseContent}',
+
+  'super-casual': 'Przepisz ten komunikat MEGA LUŹNO, jakby pisała osoba z Gen Z do ziomali. Użyj DUŻO emotek 😎🔥💯, slangu (np. "spoko", "git", "mega", "totalnie", "vibes", "no kurde"), skrótów (np. "np.", "tbh", "ngl"), casual language. Zero formalności, zero korporacyjnych sformułowań. Ma brzmieć jak wiadomość na discordzie albo messengerze. Przesadź z luz-vibe:\n\n{baseContent}',
 };
 
 export const BASE_PROMPT = `Jesteś ekspertem od komunikacji wewnętrznej w firmie. Na podstawie poniższych kluczowych informacji napisz profesjonalny komunikat firmowy w języku polskim.

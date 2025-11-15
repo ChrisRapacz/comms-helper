@@ -12,7 +12,8 @@ export type MessageVariant =
   | 'casual'
   | 'data-driven'
   | 'english'
-  | 'staropolski';
+  | 'staropolski'
+  | 'super-casual';
 
 export interface MessageVariantConfig {
   id: MessageVariant;

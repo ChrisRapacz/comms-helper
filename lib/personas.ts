@@ -155,6 +155,17 @@ export const EMPLOYEES: Employee[] = [
     preferredVariant: 'staropolski',
     generation: 'Gen X',
   },
+  {
+    id: 'emp-15',
+    firstName: 'Luźna',
+    lastName: 'Gosia',
+    fullName: 'Luźna Gosia',
+    persona: 'Super casual Gen Z',
+    description: 'Komunikacja musi być mega luźna, dużo slangu, emotek, skrótów i memów. Przesadnie casualowo.',
+    avatarUrl: 'https://i.pravatar.cc/150?img=44',
+    preferredVariant: 'super-casual',
+    generation: 'Gen Z',
+  },
 ];
 
 export function getEmployeeById(id: string): Employee | undefined {

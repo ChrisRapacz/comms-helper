@@ -85,6 +85,12 @@ export const MESSAGE_VARIANTS: MessageVariantConfig[] = [
     description: 'W imitacji staropolszczyzny, zaczynający się od "Mocium Panie,"',
     icon: '📜',
   },
+  {
+    id: 'super-casual',
+    name: 'Super Casual',
+    description: 'Mega luźny styl, dużo slangu, emotek, skrótów i memów',
+    icon: '🤙',
+  },
 ];
 
 export function getVariantConfig(variantId: string): MessageVariantConfig | undefined {

@@ -4,7 +4,7 @@ import { MESSAGE_VARIANTS } from '@/lib/variants';
 
 export async function POST(request: NextRequest) {
   try {
-    const { keyPoints, customPrompts, basePrompt } = await request.json();
+    const { keyPoints, customPrompts, basePrompt, useAsBase } = await request.json();
 
     if (!keyPoints) {
       return NextResponse.json(
@@ -26,8 +26,14 @@ export async function POST(request: NextRequest) {
       apiKey: process.env.ANTHROPIC_API_KEY,
     });
 
-    // First, generate the base content
-    const defaultBasePrompt = `Jesteś ekspertem od komunikacji wewnętrznej w firmie. Na podstawie poniższych kluczowych informacji napisz profesjonalny komunikat firmowy w języku polskim.
+    let baseContent: string;
+
+    // If useAsBase is true, use keyPoints directly as baseContent without AI generation
+    if (useAsBase) {
+      baseContent = keyPoints;
+    } else {
+      // First, generate the base content
+      const defaultBasePrompt = `Jesteś ekspertem od komunikacji wewnętrznej w firmie. Na podstawie poniższych kluczowych informacji napisz profesjonalny komunikat firmowy w języku polskim.
 
 Kluczowe informacje:
 ${keyPoints}
@@ -40,19 +46,20 @@ Wytyczne:
 
 Napisz tylko treść komunikatu, bez tytułu czy nagłówków.`;
 
-    const finalBasePrompt = basePrompt
-      ? basePrompt.replace('{keyPoints}', keyPoints)
-      : defaultBasePrompt;
+      const finalBasePrompt = basePrompt
+        ? basePrompt.replace('{keyPoints}', keyPoints)
+        : defaultBasePrompt;
 
-    const baseResponse = await anthropic.messages.create({
-      model: 'claude-sonnet-4-5-20250929',
-      max_tokens: 1024,
-      messages: [{ role: 'user', content: finalBasePrompt }],
-    });
+      const baseResponse = await anthropic.messages.create({
+        model: 'claude-sonnet-4-5-20250929',
+        max_tokens: 1024,
+        messages: [{ role: 'user', content: finalBasePrompt }],
+      });
 
-    const baseContent = baseResponse.content[0].type === 'text'
-      ? baseResponse.content[0].text
-      : '';
+      baseContent = baseResponse.content[0].type === 'text'
+        ? baseResponse.content[0].text
+        : '';
+    }
 
     // Generate variants in parallel
     const variantPromises = MESSAGE_VARIANTS.map(async (variant) => {
@@ -129,6 +136,8 @@ function getVariantPrompt(variantId: string, baseContent: string, customPrompts?
     english: `Translate the following message to English. Maintain a professional business tone suitable for corporate communication:\n\n${baseContent}`,
 
     staropolski: `Przepisz następujący komunikat w imitacji staropolszczyzny (XVI-XVII wiek). KONIECZNIE zacznij od "Mocium Panie," i używaj archaicznych form, takich jak: "iżby", "acz", "niezmiernie", "raczyć", "pojąć", itd. Zachowaj profesjonalny charakter komunikacji firmowej, ale w staropolskim stylu:\n\n${baseContent}`,
+
+    'super-casual': `Przepisz ten komunikat MEGA LUŹNO, jakby pisała osoba z Gen Z do ziomali. Użyj DUŻO emotek 😎🔥💯, slangu (np. "spoko", "git", "mega", "totalnie", "vibes", "no kurde"), skrótów (np. "np.", "tbh", "ngl"), casual language. Zero formalności, zero korporacyjnych sformułowań. Ma brzmieć jak wiadomość na discordzie albo messengerze. Przesadź z luz-vibe:\n\n${baseContent}`,
   };
 
   return prompts[variantId] || prompts.base;

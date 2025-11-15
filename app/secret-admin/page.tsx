@@ -26,6 +26,7 @@ export default function AdminPage() {
   const [showPromptEditor, setShowPromptEditor] = useState(false);
   const [customPrompts, setCustomPrompts] = useState<Record<MessageVariant, string>>(DEFAULT_PROMPTS);
   const [customBasePrompt, setCustomBasePrompt] = useState<string>(BASE_PROMPT);
+  const [useAsBase, setUseAsBase] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { addMessage, sendMessage } = useInboxStore();
@@ -152,6 +153,7 @@ export default function AdminPage() {
           keyPoints,
           customPrompts,
           basePrompt: customBasePrompt,
+          useAsBase,
         }),
       });
 
@@ -426,7 +428,7 @@ export default function AdminPage() {
                 Panel Komunikatora
               </h1>
               <p className="text-gray-600">
-                Wprowadź kluczowe informacje, a AI wygeneruje 14 spersonalizowanych wariantów komunikatu.
+                Wprowadź kluczowe informacje, a AI wygeneruje 15 spersonalizowanych wariantów komunikatu.
               </p>
             </div>
             <button
@@ -504,12 +506,35 @@ export default function AdminPage() {
               <textarea
                 value={keyPoints}
                 onChange={(e) => setKeyPoints(e.target.value)}
-                placeholder="Opisz co chcesz zakomunikować, np.:&#10;- Od stycznia 2025 nowa polityka pracy zdalnej&#10;- 3 dni w biurze, 2 dni zdalnie&#10;- Elastyczne godziny pracy 7:00-10:00&#10;- Szczegóły w intranecie"
+                placeholder={useAsBase ? "Wklej tutaj gotowy email, który zostanie użyty jako bazowy (bez zmian)..." : "Opisz co chcesz zakomunikować, np.:\n- Od stycznia 2025 nowa polityka pracy zdalnej\n- 3 dni w biurze, 2 dni zdalnie\n- Elastyczne godziny pracy 7:00-10:00\n- Szczegóły w intranecie"}
                 className="w-full h-48 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
               />
-              <p className="mt-2 text-sm text-gray-500">
-                Im więcej szczegółów podasz, tym lepsze będą wygenerowane warianty. {selectedTemplate && '✅ Załadowano szablon'}
-              </p>
+              <div className="mt-2 flex items-start justify-between">
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="useAsBase"
+                    checked={useAsBase}
+                    onChange={(e) => setUseAsBase(e.target.checked)}
+                    className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                  />
+                  <label htmlFor="useAsBase" className="text-sm font-medium text-gray-700 cursor-pointer">
+                    📧 Użyj tego tekstu jako gotowego emaila (bez zmian)
+                  </label>
+                </div>
+                <p className="text-sm text-gray-500 text-right">
+                  {selectedTemplate && '✅ Załadowano szablon'}
+                </p>
+              </div>
+              {useAsBase ? (
+                <p className="mt-2 text-sm text-blue-600 bg-blue-50 border border-blue-200 rounded p-2">
+                  💡 Ten tekst zostanie użyty bezpośrednio jako bazowa wersja - AI wygeneruje tylko warianty stylowe.
+                </p>
+              ) : (
+                <p className="mt-2 text-sm text-gray-500">
+                  Im więcej szczegółów podasz, tym lepsze będą wygenerowane warianty.
+                </p>
+              )}
             </div>
 
             <button
