@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
+import { Message, Email } from '@/lib/types';
 
 const DATA_FILE = path.join(process.cwd(), 'data', 'messages.json');
+
+interface DataStructure {
+  messages: Message[];
+  emails: Record<string, Email[]>;
+}
 
 // GET - Read all messages and emails
 export async function GET() {
@@ -22,7 +28,7 @@ export async function POST(request: NextRequest) {
     const { message, employees } = await request.json();
 
     // Read current data
-    let data = { messages: [], emails: {} };
+    let data: DataStructure = { messages: [], emails: {} };
     try {
       const fileData = await fs.readFile(DATA_FILE, 'utf-8');
       data = JSON.parse(fileData);
@@ -52,13 +58,13 @@ export async function POST(request: NextRequest) {
 
       const bodyWithDisclaimer = variantContent + disclaimer;
 
-      const email = {
+      const email: Email = {
         id: `${message.id}-${employee.id}`,
         from: 'admin@company.com',
         fromName: 'Komunikator Firmowy',
         subject: message.subject,
         body: bodyWithDisclaimer,
-        timestamp: new Date().toISOString(),
+        timestamp: new Date(),
         read: false,
         variant: employee.preferredVariant,
         isDemo: false,
@@ -72,8 +78,19 @@ export async function POST(request: NextRequest) {
       data.emails[employee.id].unshift(email);
     });
 
-    // Write updated data
-    await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
+    // Write updated data - serialize dates to ISO strings
+    const dataToSave = {
+      messages: data.messages,
+      emails: Object.keys(data.emails).reduce((acc, key) => {
+        acc[key] = data.emails[key].map(email => ({
+          ...email,
+          timestamp: email.timestamp instanceof Date ? email.timestamp.toISOString() : email.timestamp,
+        }));
+        return acc;
+      }, {} as Record<string, any[]>),
+    };
+
+    await fs.writeFile(DATA_FILE, JSON.stringify(dataToSave, null, 2), 'utf-8');
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
