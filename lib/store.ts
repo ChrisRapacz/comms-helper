@@ -18,9 +18,20 @@ export const useInboxStore = create<InboxState>((set, get) => {
 
     setCurrentEmployee: (employee) => set({ currentEmployee: employee }),
 
-    addMessage: (message) => set((state) => ({
-      messages: [...state.messages, message],
-    })),
+    addMessage: (message) => set((state) => {
+      // Check if message with this ID already exists
+      const existingIndex = state.messages.findIndex(m => m.id === message.id);
+
+      if (existingIndex >= 0) {
+        // Replace existing message
+        const updatedMessages = [...state.messages];
+        updatedMessages[existingIndex] = message;
+        return { messages: updatedMessages };
+      } else {
+        // Add new message
+        return { messages: [...state.messages, message] };
+      }
+    }),
 
     // Fetch data from server
     fetchData: async () => {
@@ -87,6 +98,30 @@ export const useInboxStore = create<InboxState>((set, get) => {
         await get().fetchData();
       } catch (error) {
         console.error('Error sending message:', error);
+        throw error;
+      }
+    },
+
+    deleteAllMessages: async () => {
+      try {
+        const response = await fetch('/api/messages', {
+          method: 'DELETE',
+        });
+
+        if (!response.ok) throw new Error('Failed to delete messages');
+
+        // Clear local state (keep demo emails)
+        const initialEmails: Record<string, Email[]> = {};
+        EMPLOYEES.forEach(emp => {
+          initialEmails[emp.id] = getInitialEmailsForEmployee(emp.id);
+        });
+
+        set({
+          messages: [],
+          emails: initialEmails,
+        });
+      } catch (error) {
+        console.error('Error deleting messages:', error);
         throw error;
       }
     },

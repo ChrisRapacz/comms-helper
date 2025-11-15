@@ -67,6 +67,7 @@ export interface InboxState {
   addMessage: (message: Message) => void;
   fetchData: () => Promise<void>;
   sendMessage: (messageId: string) => Promise<void>;
+  deleteAllMessages: () => Promise<void>;
   getEmployeeEmails: (employeeId: string) => Email[];
   markEmailAsRead: (employeeId: string, emailId: string) => void;
 }

@@ -29,7 +29,7 @@ export default function AdminPage() {
   const [useAsBase, setUseAsBase] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { addMessage, sendMessage } = useInboxStore();
+  const { addMessage, sendMessage, deleteAllMessages } = useInboxStore();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -215,6 +215,27 @@ export default function AdminPage() {
     }));
   };
 
+  const handleDeleteAll = async () => {
+    if (!confirm('Czy na pewno chcesz usunąć WSZYSTKIE wiadomości ze wszystkich skrzynek? Ta operacja jest nieodwracalna!')) {
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await deleteAllMessages();
+      alert('Wszystkie wiadomości zostały usunięte!');
+      setStep('input');
+      setKeyPoints('');
+      setSubject('');
+      setCurrentMessage(null);
+      setEditedVariants({} as Record<MessageVariant, string>);
+    } catch (err: any) {
+      setError(err.message || 'Wystąpił błąd podczas usuwania wiadomości');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (step === 'sent') {
     return (
       <div className="min-h-screen bg-gray-50 p-8">
@@ -227,25 +248,40 @@ export default function AdminPage() {
             <p className="text-gray-600 mb-6">
               Komunikat został wysłany do wszystkich pracowników w ich preferowanych wariantach.
             </p>
-            <div className="space-x-4">
-              <button
-                onClick={() => {
-                  setStep('input');
-                  setKeyPoints('');
-                  setSubject('');
-                  setCurrentMessage(null);
-                  setEditedVariants({} as Record<MessageVariant, string>);
-                }}
-                className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
-              >
-                Wyślij kolejny komunikat
-              </button>
-              <Link
-                href="/inbox"
-                className="inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700"
-              >
-                Zobacz skrzynki pracowników
-              </Link>
+            <div className="space-y-4">
+              <div className="space-x-4">
+                <button
+                  onClick={() => {
+                    setStep('input');
+                    setKeyPoints('');
+                    setSubject('');
+                    setCurrentMessage(null);
+                    setEditedVariants({} as Record<MessageVariant, string>);
+                  }}
+                  className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
+                >
+                  Wyślij kolejny komunikat
+                </button>
+                <Link
+                  href="/inbox"
+                  className="inline-block px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                >
+                  Zobacz skrzynki pracowników
+                </Link>
+              </div>
+
+              <div className="pt-4 border-t border-gray-200">
+                <button
+                  onClick={handleDeleteAll}
+                  disabled={loading}
+                  className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  🗑️ Wyczyść wszystkie wiadomości (TEST)
+                </button>
+                <p className="text-xs text-gray-500 mt-2">
+                  Usuwa wszystkie wiadomości ze wszystkich skrzynek. Demo maile pozostają.
+                </p>
+              </div>
             </div>
           </div>
         </div>

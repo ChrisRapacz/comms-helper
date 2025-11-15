@@ -22,6 +22,21 @@ export async function GET() {
   }
 }
 
+// DELETE - Clear all messages and emails
+export async function DELETE() {
+  try {
+    const emptyData = { messages: [], emails: {} };
+    await fs.writeFile(DATA_FILE, JSON.stringify(emptyData, null, 2), 'utf-8');
+    return NextResponse.json({ success: true, message: 'All messages deleted' });
+  } catch (error: any) {
+    console.error('Error deleting messages:', error);
+    return NextResponse.json(
+      { error: error?.message || 'Failed to delete messages' },
+      { status: 500 }
+    );
+  }
+}
+
 // POST - Save message and send to all employees
 export async function POST(request: NextRequest) {
   try {
