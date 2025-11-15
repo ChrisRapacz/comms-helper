@@ -312,6 +312,12 @@ export default function EmployeeInboxPage() {
                   <p className="text-xs md:text-sm text-blue-700">
                     {employee.description}
                   </p>
+                  <button
+                    onClick={() => setShowPreferencesModal(true)}
+                    className="mt-2 text-xs md:text-sm text-indigo-600 hover:text-indigo-800 font-semibold underline"
+                  >
+                    🤖 Zobacz instrukcje AI dla tego wariantu
+                  </button>
                 </div>
               </div>
             </div>
