@@ -371,7 +371,7 @@ export default function EmployeeInboxPage() {
           </div>
 
           {/* Email content - full width on mobile (only when email is selected), half width on desktop */}
-          <div className={`${!showMobileEmailView && selectedEmail ? 'hidden md:flex' : showMobileEmailView ? 'flex' : 'hidden md:flex'} flex-1 bg-white overflow-y-auto flex-col`}>
+          <div className={`${!showMobileEmailView && selectedEmail ? 'hidden md:flex' : showMobileEmailView ? 'flex' : 'hidden md:flex'} flex-1 bg-white overflow-y-auto overflow-x-hidden max-w-full flex-col`}>
             {selectedEmail ? (
               <div className="flex flex-col h-full">
                 {/* Mobile back button */}
@@ -444,9 +444,9 @@ export default function EmployeeInboxPage() {
                   </div>
                 )}
 
-                <div className="prose max-w-none">
+                <div className="max-w-full overflow-hidden">
                   <div
-                    className="whitespace-pre-wrap text-gray-800 leading-relaxed break-words overflow-wrap-anywhere text-justify"
+                    className="whitespace-pre-wrap text-gray-800 leading-relaxed break-words overflow-wrap-anywhere text-justify max-w-full"
                     dangerouslySetInnerHTML={{ __html: selectedEmail.body }}
                   />
                 </div>
