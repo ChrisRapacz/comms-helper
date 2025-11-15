@@ -108,10 +108,10 @@ export default function EmployeeInboxPage() {
             </p>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-6">
-            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-              <h3 className="font-semibold text-gray-900 mb-4">{selectedEmail.subject}</h3>
-              <div className="whitespace-pre-wrap text-gray-800 leading-relaxed">
+          <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 max-w-full">
+            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200 max-w-full overflow-hidden">
+              <h3 className="font-semibold text-gray-900 mb-4 break-words">{selectedEmail.subject}</h3>
+              <div className="whitespace-pre-wrap text-gray-800 leading-relaxed break-words overflow-wrap-anywhere max-w-full">
                 {selectedEmail.originalContent}
               </div>
             </div>
@@ -149,46 +149,46 @@ export default function EmployeeInboxPage() {
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-6 space-y-6">
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200">
-              <div className="flex items-start space-x-4">
-                <span className="text-4xl">{variantConfig?.icon}</span>
-                <div>
-                  <h3 className="text-xl font-bold text-blue-900 mb-2">
+          <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 space-y-6 max-w-full">
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200 max-w-full overflow-hidden">
+              <div className="flex items-start space-x-4 max-w-full">
+                <span className="text-4xl flex-shrink-0">{variantConfig?.icon}</span>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-xl font-bold text-blue-900 mb-2 break-words">
                     {variantConfig?.name}
                   </h3>
-                  <p className="text-blue-700 mb-4">
+                  <p className="text-blue-700 mb-4 break-words">
                     {variantConfig?.description}
                   </p>
-                  <div className="bg-white bg-opacity-50 rounded p-3 text-sm text-blue-900">
+                  <div className="bg-white bg-opacity-50 rounded p-3 text-sm text-blue-900 break-words">
                     <strong>Twój profil:</strong> {employee.persona}
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="space-y-3">
-              <h4 className="font-semibold text-gray-900">📋 Szczegóły dopasowania:</h4>
-              <div className="bg-gray-50 rounded-lg p-4 space-y-2 text-sm text-gray-700">
-                <p><strong>Pokolenie:</strong> {employee.generation}</p>
-                <p><strong>Opis preferencji:</strong> {employee.description}</p>
+            <div className="space-y-3 max-w-full">
+              <h4 className="font-semibold text-gray-900 break-words">📋 Szczegóły dopasowania:</h4>
+              <div className="bg-gray-50 rounded-lg p-4 space-y-2 text-sm text-gray-700 max-w-full overflow-hidden">
+                <p className="break-words"><strong>Pokolenie:</strong> {employee.generation}</p>
+                <p className="break-words"><strong>Opis preferencji:</strong> {employee.description}</p>
               </div>
             </div>
 
-            <div className="space-y-3">
-              <h4 className="font-semibold text-gray-900">🤖 Instrukcje AI dla Twojego wariantu:</h4>
-              <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4">
-                <p className="text-sm text-indigo-900 mb-2 font-semibold">
+            <div className="space-y-3 max-w-full">
+              <h4 className="font-semibold text-gray-900 break-words">🤖 Instrukcje AI dla Twojego wariantu:</h4>
+              <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4 max-w-full overflow-hidden">
+                <p className="text-sm text-indigo-900 mb-2 font-semibold break-words">
                   Następujący prompt jest używany przez AI do generowania wiadomości w Twoim stylu:
                 </p>
-                <div className="bg-white rounded p-4 text-sm text-gray-700 font-mono whitespace-pre-wrap border border-indigo-100">
+                <div className="bg-white rounded p-4 text-sm text-gray-700 font-mono whitespace-pre-wrap border border-indigo-100 break-words overflow-wrap-anywhere max-w-full">
                   {DEFAULT_PROMPTS[employee.preferredVariant]}
                 </div>
               </div>
             </div>
 
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-              <p className="text-sm text-yellow-900">
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 max-w-full overflow-hidden">
+              <p className="text-sm text-yellow-900 break-words">
                 <strong>💡 Informacja:</strong> To jest funkcja demonstracyjna. W rzeczywistej implementacji
                 możesz tutaj umieścić formularz do zmiany preferencji komunikacyjnych.
               </p>
@@ -240,7 +240,7 @@ export default function EmployeeInboxPage() {
         </div>
       </header>
 
-      <div className="flex h-[calc(100vh-64px)]">
+      <div className="flex h-[calc(100vh-64px)] overflow-x-hidden max-w-full">
         {/* Sidebar - hidden on mobile */}
         <div className="hidden md:flex md:w-64 bg-white border-r border-gray-200 flex-col">
           <div className="p-4">
@@ -285,7 +285,7 @@ export default function EmployeeInboxPage() {
         </div>
 
         {/* Email list and content container */}
-        <div className="flex-1 flex">
+        <div className="flex-1 flex overflow-x-hidden max-w-full">
           {/* Email list - full width on mobile (hidden when email is open), half width on desktop */}
           <div className={`${showMobileEmailView ? 'hidden md:flex' : 'flex'} w-full md:w-1/2 bg-white md:border-r border-gray-200 overflow-y-auto flex-col`}>
             {/* Mobile: Back to employee selection */}
@@ -302,19 +302,19 @@ export default function EmployeeInboxPage() {
             </div>
 
             {/* Preference banner */}
-            <div className="bg-blue-50 border-b border-blue-200 p-3 md:p-4">
-              <div className="flex items-start space-x-2 md:space-x-3">
-                <span className="text-xl md:text-2xl">{variantConfig?.icon}</span>
-                <div className="flex-1">
-                  <h3 className="text-sm md:text-base font-semibold text-blue-900">
+            <div className="bg-blue-50 border-b border-blue-200 p-3 md:p-4 max-w-full overflow-hidden">
+              <div className="flex items-start space-x-2 md:space-x-3 max-w-full">
+                <span className="text-xl md:text-2xl flex-shrink-0">{variantConfig?.icon}</span>
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-sm md:text-base font-semibold text-blue-900 break-words">
                     Twoja preferencja: {variantConfig?.name}
                   </h3>
-                  <p className="text-xs md:text-sm text-blue-700">
+                  <p className="text-xs md:text-sm text-blue-700 break-words">
                     {employee.description}
                   </p>
                   <button
                     onClick={() => setShowPreferencesModal(true)}
-                    className="mt-2 text-xs md:text-sm text-indigo-600 hover:text-indigo-800 font-semibold underline"
+                    className="mt-2 text-xs md:text-sm text-indigo-600 hover:text-indigo-800 font-semibold underline break-words"
                   >
                     🤖 Zobacz instrukcje AI dla tego wariantu
                   </button>
@@ -389,12 +389,12 @@ export default function EmployeeInboxPage() {
                   </span>
                 </div>
 
-                <div className="p-4 md:p-8 flex-1 overflow-y-auto">
-                  <div className="mb-6">
-                    <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 break-words">
+                <div className="p-4 md:p-8 flex-1 overflow-y-auto overflow-x-hidden max-w-full">
+                  <div className="mb-6 max-w-full">
+                    <h1 className="text-base md:text-2xl font-bold text-gray-900 mb-4 break-words">
                       {selectedEmail.subject}
                     </h1>
-                  <div className="flex items-start space-x-3 md:space-x-4 pb-4 border-b border-gray-200">
+                  <div className="flex items-start space-x-3 md:space-x-4 pb-4 border-b border-gray-200 max-w-full overflow-hidden">
                     {!selectedEmail.isDemo && selectedEmail.from === 'internalcomms@chrisrapacz.com' ? (
                       <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
                         <Image
@@ -429,14 +429,14 @@ export default function EmployeeInboxPage() {
                 </div>
 
                 {selectedEmail.variant && !selectedEmail.isDemo && (
-                  <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                    <div className="flex items-start space-x-2">
-                      <span className="text-xl">{variantConfig?.icon}</span>
-                      <div>
-                        <h3 className="font-semibold text-green-900">
+                  <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg max-w-full overflow-hidden">
+                    <div className="flex items-start space-x-2 max-w-full">
+                      <span className="text-xl flex-shrink-0">{variantConfig?.icon}</span>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-green-900 break-words">
                           Ta wiadomość została dostosowana do Twoich preferencji
                         </h3>
-                        <p className="text-sm text-green-700 mt-1">
+                        <p className="text-sm text-green-700 mt-1 break-words">
                           Format: <strong>{variantConfig?.name}</strong> - {variantConfig?.description}
                         </p>
                       </div>
