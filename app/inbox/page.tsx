@@ -15,13 +15,6 @@ export default function InboxLoginPage() {
     router.push(`/inbox/${employee.id}`);
   };
 
-  const generationColors: Record<string, string> = {
-    'Boomer': 'bg-purple-100 text-purple-800',
-    'Gen X': 'bg-blue-100 text-blue-800',
-    'Millennial': 'bg-green-100 text-green-800',
-    'Gen Z': 'bg-yellow-100 text-yellow-800',
-  };
-
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-6xl mx-auto">
@@ -58,9 +51,6 @@ export default function InboxLoginPage() {
                   <p className="text-sm text-gray-600 mb-2">
                     {employee.persona}
                   </p>
-                  <span className={`inline-block px-2 py-1 rounded-full text-xs font-semibold ${generationColors[employee.generation]}`}>
-                    {employee.generation}
-                  </span>
                 </div>
               </div>
               <p className="mt-4 text-sm text-gray-600 line-clamp-2">
@@ -73,37 +63,17 @@ export default function InboxLoginPage() {
           ))}
         </div>
 
-        <div className="mt-12 p-6 bg-white rounded-lg shadow">
-          <h3 className="font-semibold text-gray-900 mb-4">
-            Legenda preferencji komunikacyjnych
-          </h3>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
-            <div>
-              <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${generationColors['Boomer']}`}>
-                Boomer
-              </span>
-              <p className="mt-2 text-gray-600">Szczegółowe, formalne komunikaty</p>
-            </div>
-            <div>
-              <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${generationColors['Gen X']}`}>
-                Gen X
-              </span>
-              <p className="mt-2 text-gray-600">Zwięzłe, praktyczne podejście</p>
-            </div>
-            <div>
-              <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${generationColors['Millennial']}`}>
-                Millennial
-              </span>
-              <p className="mt-2 text-gray-600">Strukturalne, współpracujące</p>
-            </div>
-            <div>
-              <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${generationColors['Gen Z']}`}>
-                Gen Z
-              </span>
-              <p className="mt-2 text-gray-600">Wizualne, konkretne, szybkie</p>
-            </div>
-          </div>
-        </div>
+        <footer className="mt-12 text-center text-sm text-gray-600">
+          Zrobione przez{' '}
+          <a
+            href="https://www.linkedin.com/in/krzysztofrapacz"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-indigo-600 hover:text-indigo-800 font-semibold"
+          >
+            Chris Rapacz
+          </a>
+        </footer>
       </div>
     </div>
   );

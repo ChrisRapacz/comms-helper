@@ -208,7 +208,6 @@ export default function EmployeeInboxPage() {
             <div className="space-y-3 max-w-full">
               <h4 className="font-semibold text-gray-900 break-words">📋 Szczegóły dopasowania:</h4>
               <div className="bg-gray-50 rounded-lg p-4 space-y-2 text-sm text-gray-700 max-w-full overflow-x-hidden">
-                <p className="break-words"><strong>Pokolenie:</strong> {employee.generation}</p>
                 <p className="break-words"><strong>Opis preferencji:</strong> {employee.description}</p>
               </div>
             </div>

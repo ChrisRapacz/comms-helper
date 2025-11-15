@@ -10,7 +10,6 @@ export const EMPLOYEES: Employee[] = [
     description: 'Ceni szczegóły, kontekst i formalny ton. Preferuje pełną informację przed podjęciem decyzji.',
     avatarUrl: 'https://i.pravatar.cc/150?img=47',
     preferredVariant: 'detailed',
-    generation: 'Boomer',
   },
   {
     id: 'emp-2',
@@ -21,7 +20,6 @@ export const EMPLOYEES: Employee[] = [
     description: 'Ceni zwięzłość i praktyczne podejście. Nie lubi zbędnych ozdobników - prosto do rzeczy.',
     avatarUrl: 'https://i.pravatar.cc/150?img=13',
     preferredVariant: 'short',
-    generation: 'Gen X',
   },
   {
     id: 'emp-3',
@@ -32,7 +30,6 @@ export const EMPLOYEES: Employee[] = [
     description: 'Lubi jasną strukturę i wyraźne sekcje. Preferuje organizację informacji z nagłówkami.',
     avatarUrl: 'https://i.pravatar.cc/150?img=32',
     preferredVariant: 'subsections',
-    generation: 'Millennial',
   },
   {
     id: 'emp-4',
@@ -43,7 +40,6 @@ export const EMPLOYEES: Employee[] = [
     description: 'Chce konkretów - liczby, fakty, dane. Lubi wiedzieć "ile", "kiedy", "jak dużo".',
     avatarUrl: 'https://i.pravatar.cc/150?img=12',
     preferredVariant: 'data-driven',
-    generation: 'Gen Z',
   },
   {
     id: 'emp-5',
@@ -54,7 +50,6 @@ export const EMPLOYEES: Employee[] = [
     description: 'Potrzebuje szybko znać najważniejsze - TL;DR na początku, szczegóły jeśli potrzeba.',
     avatarUrl: 'https://i.pravatar.cc/150?img=38',
     preferredVariant: 'tldr-first',
-    generation: 'Millennial',
   },
   {
     id: 'emp-6',
@@ -65,7 +60,6 @@ export const EMPLOYEES: Employee[] = [
     description: 'Chce wiedzieć co ma zrobić, kiedy i jak. Skupia się na akcjach i deadlinach.',
     avatarUrl: 'https://i.pravatar.cc/150?img=15',
     preferredVariant: 'action-oriented',
-    generation: 'Gen X',
   },
   {
     id: 'emp-7',
@@ -76,7 +70,6 @@ export const EMPLOYEES: Employee[] = [
     description: 'Lubi wizualną komunikację - emoji, ikony, kolory. To pomaga jej zapamiętać informacje.',
     avatarUrl: 'https://i.pravatar.cc/150?img=45',
     preferredVariant: 'visual',
-    generation: 'Gen Z',
   },
   {
     id: 'emp-8',
@@ -87,7 +80,6 @@ export const EMPLOYEES: Employee[] = [
     description: 'Nie ma czasu na długie czytanie - bullet points pozwalają szybko przeskanować treść.',
     avatarUrl: 'https://i.pravatar.cc/150?img=11',
     preferredVariant: 'bullets',
-    generation: 'Millennial',
   },
   {
     id: 'emp-9',
@@ -98,7 +90,6 @@ export const EMPLOYEES: Employee[] = [
     description: 'Ceni formalny, profesjonalny ton. Oczekuje korporacyjnego standardu komunikacji.',
     avatarUrl: 'https://i.pravatar.cc/150?img=48',
     preferredVariant: 'formal',
-    generation: 'Boomer',
   },
   {
     id: 'emp-10',
@@ -109,7 +100,6 @@ export const EMPLOYEES: Employee[] = [
     description: 'Preferuje luźny, przyjacielski ton. Oficjalna komunikacja go stresuje.',
     avatarUrl: 'https://i.pravatar.cc/150?img=14',
     preferredVariant: 'casual',
-    generation: 'Gen Z',
   },
   {
     id: 'emp-11',
@@ -120,7 +110,6 @@ export const EMPLOYEES: Employee[] = [
     description: 'Myśli pytaniami. Format FAQ pozwala jej lepiej zrozumieć temat.',
     avatarUrl: 'https://i.pravatar.cc/150?img=43',
     preferredVariant: 'faq',
-    generation: 'Millennial',
   },
   {
     id: 'emp-12',
@@ -131,7 +120,6 @@ export const EMPLOYEES: Employee[] = [
     description: 'Zadowoli go zwykła, wyważona komunikacja bez szczególnych preferencji.',
     avatarUrl: 'https://i.pravatar.cc/150?img=16',
     preferredVariant: 'base',
-    generation: 'Gen X',
   },
   {
     id: 'emp-13',
@@ -142,7 +130,6 @@ export const EMPLOYEES: Employee[] = [
     description: 'Jedyny anglojęzyczny pracownik. Wszystkie komunikaty muszą być przetłumaczone na angielski.',
     avatarUrl: 'https://i.pravatar.cc/150?img=33',
     preferredVariant: 'english',
-    generation: 'Millennial',
   },
   {
     id: 'emp-14',
@@ -153,7 +140,6 @@ export const EMPLOYEES: Employee[] = [
     description: 'Oczekuje komunikatów w imitacji staropolszczyzny, zawsze zaczynających się od "Mocium Panie,".',
     avatarUrl: 'https://static.wikia.nocookie.net/the-office-pl/images/4/4b/Darek.png/revision/latest?cb=20241205155145&path-prefix=pl',
     preferredVariant: 'staropolski',
-    generation: 'Gen X',
   },
   {
     id: 'emp-15',
@@ -164,7 +150,6 @@ export const EMPLOYEES: Employee[] = [
     description: 'Komunikacja musi być mega luźna, dużo slangu, emotek, skrótów i memów. Przesadnie casualowo.',
     avatarUrl: 'https://i.pravatar.cc/150?img=44',
     preferredVariant: 'super-casual',
-    generation: 'Gen Z',
   },
 ];
 

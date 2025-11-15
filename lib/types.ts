@@ -31,7 +31,6 @@ export interface Employee {
   description: string;
   avatarUrl: string;
   preferredVariant: MessageVariant;
-  generation: 'Boomer' | 'Gen X' | 'Millennial' | 'Gen Z';
 }
 
 export interface Email {
