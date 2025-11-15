@@ -151,7 +151,7 @@ export const EMPLOYEES: Employee[] = [
     fullName: 'Dziwny Mariusz',
     persona: 'Miłośnik staropolszczyzny',
     description: 'Oczekuje komunikatów w imitacji staropolszczyzny, zawsze zaczynających się od "Mocium Panie,".',
-    avatarUrl: 'https://i.pravatar.cc/150?img=52',
+    avatarUrl: 'https://static.wikia.nocookie.net/the-office-pl/images/4/4b/Darek.png/revision/latest?cb=20241205155145&path-prefix=pl',
     preferredVariant: 'staropolski',
     generation: 'Gen X',
   },

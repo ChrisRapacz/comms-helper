@@ -15,6 +15,10 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'chrisrapacz.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'static.wikia.nocookie.net',
+      },
     ],
   },
 }

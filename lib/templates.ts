@@ -171,7 +171,7 @@ Krótkie szkolenie dla Buddy: 10 stycznia 2026`,
 🏢 PROCEDURA LOCKDOWN:
 1. Alarm zostanie uruchomiony przez systemy monitoringu AI
 2. Automatyczne blokowanie wszystkich wejść (stal pancerna)
-3. Przejście w tryb pracy zdalnej (bo jednak przeżyliśmy 2020)
+3. WAŻNE: Mimo apokalipsy zombie, praca TYLKO z biura - praca zdalna zabija kulturę organizacyjną (nawet bardziej niż zombie)
 
 🛡️ WYPOSAŻENIE:
 - Każdy desk ma zestaw przetrwania (woda, batonik, maczeta)

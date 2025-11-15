@@ -302,7 +302,7 @@ export default function EmployeeInboxPage() {
             </div>
 
             {/* Preference banner */}
-            <div className="bg-blue-50 border-b border-blue-200 p-3 md:p-4 max-w-full overflow-x-hidden">
+            <div className="bg-blue-50 border-b border-blue-200 p-3 md:p-4 max-w-full overflow-x-hidden flex-shrink-0">
               <div className="flex items-start space-x-2 md:space-x-3 max-w-full">
                 <span className="text-xl md:text-2xl flex-shrink-0">{variantConfig?.icon}</span>
                 <div className="flex-1 min-w-0">
