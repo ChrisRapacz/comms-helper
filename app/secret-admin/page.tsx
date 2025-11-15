@@ -173,9 +173,9 @@ export default function AdminPage() {
         sent: false,
       };
 
+      // Only save to local state, not to store yet
       setCurrentMessage(message);
       setEditedVariants(data.variants);
-      addMessage(message);
       setStep('editing');
     } catch (err: any) {
       setError(err.message || 'Wystąpił błąd podczas generowania wariantów');
@@ -190,11 +190,14 @@ export default function AdminPage() {
     try {
       setLoading(true);
 
-      // Update variants with edited content
-      const updatedMessage = {
+      // Update message in store with edited variants before sending
+      const updatedMessage: Message = {
         ...currentMessage,
         variants: editedVariants,
       };
+
+      // Update the message in store first
+      addMessage(updatedMessage);
 
       await sendMessage(updatedMessage.id);
       setStep('sent');

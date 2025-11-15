@@ -30,15 +30,22 @@ export const useInboxStore = create<InboxState>((set, get) => {
 
         const data = await response.json();
 
-        // Merge server data with demo emails
+        // Merge server data with demo emails, avoiding duplicates
         const mergedEmails = { ...get().emails };
         Object.keys(data.emails || {}).forEach(employeeId => {
-          // Prepend server emails to demo emails
           const serverEmails = data.emails[employeeId].map((email: any) => ({
             ...email,
             timestamp: new Date(email.timestamp),
           }));
-          mergedEmails[employeeId] = [...serverEmails, ...(get().emails[employeeId] || [])];
+
+          const existingEmails = mergedEmails[employeeId] || [];
+          const existingIds = new Set(existingEmails.map(e => e.id));
+
+          // Only add emails that don't already exist
+          const newEmails = serverEmails.filter(email => !existingIds.has(email.id));
+
+          // Prepend new server emails to existing emails
+          mergedEmails[employeeId] = [...newEmails, ...existingEmails];
         });
 
         set({
