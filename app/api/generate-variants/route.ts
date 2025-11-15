@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { MESSAGE_VARIANTS } from '@/lib/variants';
 
+// Increase timeout for this route to 2 minutes (default is 60s)
+export const maxDuration = 120;
+
 export async function POST(request: NextRequest) {
   try {
     const { keyPoints, customPrompts, basePrompt, useAsBase } = await request.json();
@@ -32,7 +35,7 @@ export async function POST(request: NextRequest) {
     if (useAsBase) {
       baseContent = keyPoints;
     } else {
-      // First, generate the base content
+      // First, generate the base content using Sonnet
       const defaultBasePrompt = `Jesteś ekspertem od komunikacji wewnętrznej w firmie. Na podstawie poniższych kluczowych informacji napisz profesjonalny komunikat firmowy w języku polskim.
 
 Kluczowe informacje:
@@ -61,13 +64,13 @@ Napisz tylko treść komunikatu, bez tytułu czy nagłówków.`;
         : '';
     }
 
-    // Generate variants in parallel
+    // Generate variants in parallel using Haiku (faster and cheaper for simple transformations)
     const variantPromises = MESSAGE_VARIANTS.map(async (variant) => {
       const variantPrompt = getVariantPrompt(variant.id, baseContent, customPrompts);
 
       const response = await anthropic.messages.create({
-        model: 'claude-sonnet-4-5-20250929',
-        max_tokens: 1024,
+        model: 'claude-haiku-4-20250514', // Use Haiku for faster responses
+        max_tokens: 800, // Reduced from 1024
         messages: [{ role: 'user', content: variantPrompt }],
       });
 
