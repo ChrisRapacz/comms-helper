@@ -109,7 +109,7 @@ export default function EmployeeInboxPage() {
           </div>
 
           <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 max-w-full">
-            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200 max-w-full overflow-hidden">
+            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200 max-w-full overflow-x-hidden">
               <h3 className="font-semibold text-gray-900 mb-4 break-words">{selectedEmail.subject}</h3>
               <div className="whitespace-pre-wrap text-gray-800 leading-relaxed break-words overflow-wrap-anywhere max-w-full">
                 {selectedEmail.originalContent}
@@ -150,7 +150,7 @@ export default function EmployeeInboxPage() {
           </div>
 
           <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 space-y-6 max-w-full">
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200 max-w-full overflow-hidden">
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200 max-w-full overflow-x-hidden">
               <div className="flex items-start space-x-4 max-w-full">
                 <span className="text-4xl flex-shrink-0">{variantConfig?.icon}</span>
                 <div className="flex-1 min-w-0">
@@ -169,7 +169,7 @@ export default function EmployeeInboxPage() {
 
             <div className="space-y-3 max-w-full">
               <h4 className="font-semibold text-gray-900 break-words">📋 Szczegóły dopasowania:</h4>
-              <div className="bg-gray-50 rounded-lg p-4 space-y-2 text-sm text-gray-700 max-w-full overflow-hidden">
+              <div className="bg-gray-50 rounded-lg p-4 space-y-2 text-sm text-gray-700 max-w-full overflow-x-hidden">
                 <p className="break-words"><strong>Pokolenie:</strong> {employee.generation}</p>
                 <p className="break-words"><strong>Opis preferencji:</strong> {employee.description}</p>
               </div>
@@ -177,7 +177,7 @@ export default function EmployeeInboxPage() {
 
             <div className="space-y-3 max-w-full">
               <h4 className="font-semibold text-gray-900 break-words">🤖 Instrukcje AI dla Twojego wariantu:</h4>
-              <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4 max-w-full overflow-hidden">
+              <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4 max-w-full overflow-x-hidden">
                 <p className="text-sm text-indigo-900 mb-2 font-semibold break-words">
                   Następujący prompt jest używany przez AI do generowania wiadomości w Twoim stylu:
                 </p>
@@ -187,7 +187,7 @@ export default function EmployeeInboxPage() {
               </div>
             </div>
 
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 max-w-full overflow-hidden">
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 max-w-full overflow-x-hidden">
               <p className="text-sm text-yellow-900 break-words">
                 <strong>💡 Informacja:</strong> To jest funkcja demonstracyjna. W rzeczywistej implementacji
                 możesz tutaj umieścić formularz do zmiany preferencji komunikacyjnych.
@@ -302,7 +302,7 @@ export default function EmployeeInboxPage() {
             </div>
 
             {/* Preference banner */}
-            <div className="bg-blue-50 border-b border-blue-200 p-3 md:p-4 max-w-full overflow-hidden">
+            <div className="bg-blue-50 border-b border-blue-200 p-3 md:p-4 max-w-full overflow-x-hidden">
               <div className="flex items-start space-x-2 md:space-x-3 max-w-full">
                 <span className="text-xl md:text-2xl flex-shrink-0">{variantConfig?.icon}</span>
                 <div className="flex-1 min-w-0">
@@ -394,7 +394,7 @@ export default function EmployeeInboxPage() {
                     <h1 className="text-base md:text-2xl font-bold text-gray-900 mb-4 break-words">
                       {selectedEmail.subject}
                     </h1>
-                  <div className="flex items-start space-x-3 md:space-x-4 pb-4 border-b border-gray-200 max-w-full overflow-hidden">
+                  <div className="flex items-start space-x-3 md:space-x-4 pb-4 border-b border-gray-200 max-w-full overflow-x-hidden">
                     {!selectedEmail.isDemo && selectedEmail.from === 'internalcomms@chrisrapacz.com' ? (
                       <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
                         <Image
@@ -429,7 +429,7 @@ export default function EmployeeInboxPage() {
                 </div>
 
                 {selectedEmail.variant && !selectedEmail.isDemo && (
-                  <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg max-w-full overflow-hidden">
+                  <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg max-w-full overflow-x-hidden">
                     <div className="flex items-start space-x-2 max-w-full">
                       <span className="text-xl flex-shrink-0">{variantConfig?.icon}</span>
                       <div className="flex-1 min-w-0">
@@ -444,7 +444,7 @@ export default function EmployeeInboxPage() {
                   </div>
                 )}
 
-                <div className="max-w-full overflow-hidden">
+                <div className="max-w-full overflow-x-hidden">
                   <div
                     className="whitespace-pre-wrap text-gray-800 leading-relaxed break-words overflow-wrap-anywhere text-justify max-w-full"
                     dangerouslySetInnerHTML={{ __html: selectedEmail.body }}
