@@ -15,13 +15,25 @@ export default function EmployeeInboxPage() {
   const params = useParams();
   const employeeId = params.employeeId as string;
   const employee = useMemo(() => getEmployeeById(employeeId), [employeeId]);
-  const { getEmployeeEmails, markEmailAsRead } = useInboxStore();
+  const { getEmployeeEmails, markEmailAsRead, fetchData } = useInboxStore();
 
   const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
   const [showOriginalModal, setShowOriginalModal] = useState(false);
   const [showPreferencesModal, setShowPreferencesModal] = useState(false);
   const [showMobileEmailView, setShowMobileEmailView] = useState(false);
   const emails = getEmployeeEmails(employeeId);
+
+  // Fetch data from server on mount and set up polling
+  useEffect(() => {
+    fetchData(); // Initial fetch
+
+    // Poll for new messages every 5 seconds
+    const interval = setInterval(() => {
+      fetchData();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [fetchData]);
 
   // Handle clicks on links in email body
   useEffect(() => {

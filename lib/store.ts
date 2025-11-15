@@ -4,7 +4,7 @@ import { EMPLOYEES } from './personas';
 import { getInitialEmailsForEmployee } from './sample-emails';
 
 export const useInboxStore = create<InboxState>((set, get) => {
-  // Initialize emails for all employees
+  // Initialize emails for all employees (demo data only)
   const initialEmails: Record<string, Email[]> = {};
   EMPLOYEES.forEach(emp => {
     initialEmails[emp.id] = getInitialEmailsForEmployee(emp.id);
@@ -22,55 +22,67 @@ export const useInboxStore = create<InboxState>((set, get) => {
       messages: [...state.messages, message],
     })),
 
-    sendMessage: (messageId) => set((state) => {
-      const message = state.messages.find(m => m.id === messageId);
-      if (!message) return state;
+    // Fetch data from server
+    fetchData: async () => {
+      try {
+        const response = await fetch('/api/messages');
+        if (!response.ok) throw new Error('Failed to fetch messages');
 
-      // Create emails for each employee with their preferred variant
-      const newEmails = { ...state.emails };
+        const data = await response.json();
 
-      state.employees.forEach(employee => {
-        const variantContent = message.variants[employee.preferredVariant] || message.baseContent;
+        // Merge server data with demo emails
+        const mergedEmails = { ...get().emails };
+        Object.keys(data.emails || {}).forEach(employeeId => {
+          // Prepend server emails to demo emails
+          const serverEmails = data.emails[employeeId].map((email: any) => ({
+            ...email,
+            timestamp: new Date(email.timestamp),
+          }));
+          mergedEmails[employeeId] = [...serverEmails, ...(get().emails[employeeId] || [])];
+        });
 
-        // Add AI disclaimer to the email body
-        const disclaimer = `
+        set({
+          messages: data.messages || [],
+          emails: mergedEmails,
+        });
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    },
 
----
+    sendMessage: async (messageId) => {
+      const message = get().messages.find(m => m.id === messageId);
+      if (!message) return;
 
-<div style="background: #f3f4f6; border-left: 4px solid #6366f1; padding: 12px; margin-top: 24px; font-size: 13px; color: #4b5563;">
-  <p style="margin: 0 0 8px 0;"><strong>🤖 Ta wiadomość została automatycznie dopasowana do Twoich preferencji komunikacyjnych</strong></p>
-  <p style="margin: 0;">
-    <a href="#view-original-${messageId}" style="color: #6366f1; text-decoration: none;">📄 Zobacz oryginalną wersję wiadomości</a> |
-    <a href="#change-preferences" style="color: #6366f1; text-decoration: none;">⚙️ Zmień swoje preferencje</a>
-  </p>
-</div>`;
+      try {
+        // Send to server
+        const response = await fetch('/api/messages', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            message,
+            employees: get().employees,
+          }),
+        });
 
-        const bodyWithDisclaimer = variantContent + disclaimer;
+        if (!response.ok) throw new Error('Failed to send message');
 
-        const email: Email = {
-          id: `${messageId}-${employee.id}`,
-          from: 'admin@company.com',
-          fromName: 'Komunikator Firmowy',
-          subject: message.subject,
-          body: bodyWithDisclaimer,
-          timestamp: new Date(),
-          read: false,
-          variant: employee.preferredVariant,
-          isDemo: false,
-          originalContent: message.baseContent,
-          messageId: messageId,
-        };
+        // Mark as sent locally
+        set((state) => ({
+          messages: state.messages.map(m =>
+            m.id === messageId ? { ...m, sent: true } : m
+          ),
+        }));
 
-        newEmails[employee.id] = [email, ...(newEmails[employee.id] || [])];
-      });
-
-      return {
-        messages: state.messages.map(m =>
-          m.id === messageId ? { ...m, sent: true } : m
-        ),
-        emails: newEmails,
-      };
-    }),
+        // Refresh data from server
+        await get().fetchData();
+      } catch (error) {
+        console.error('Error sending message:', error);
+        throw error;
+      }
+    },
 
     getEmployeeEmails: (employeeId) => {
       return get().emails[employeeId] || [];

@@ -35,5 +35,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# data
-/data
+# data - ignore all except the initial messages.json template
+/data/*
+!/data/messages.json

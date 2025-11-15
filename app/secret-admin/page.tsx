@@ -184,17 +184,25 @@ export default function AdminPage() {
     }
   };
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!currentMessage) return;
 
-    // Update variants with edited content
-    const updatedMessage = {
-      ...currentMessage,
-      variants: editedVariants,
-    };
+    try {
+      setLoading(true);
 
-    sendMessage(updatedMessage.id);
-    setStep('sent');
+      // Update variants with edited content
+      const updatedMessage = {
+        ...currentMessage,
+        variants: editedVariants,
+      };
+
+      await sendMessage(updatedMessage.id);
+      setStep('sent');
+    } catch (err: any) {
+      setError(err.message || 'Wystąpił błąd podczas wysyłania wiadomości');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleEditVariant = (variant: MessageVariant, content: string) => {

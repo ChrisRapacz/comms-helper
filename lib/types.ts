@@ -65,7 +65,8 @@ export interface InboxState {
   currentEmployee: Employee | null;
   setCurrentEmployee: (employee: Employee | null) => void;
   addMessage: (message: Message) => void;
-  sendMessage: (messageId: string) => void;
+  fetchData: () => Promise<void>;
+  sendMessage: (messageId: string) => Promise<void>;
   getEmployeeEmails: (employeeId: string) => Email[];
   markEmailAsRead: (employeeId: string, emailId: string) => void;
 }
