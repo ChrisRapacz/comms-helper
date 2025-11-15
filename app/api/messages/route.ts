@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { promises as fs } from 'fs';
 import path from 'path';
 import { Message, Email } from '@/lib/types';
+import { markdownToHtml } from '@/lib/markdown';
 
 const DATA_FILE = path.join(process.cwd(), 'data', 'messages.json');
 
@@ -58,6 +59,9 @@ export async function POST(request: NextRequest) {
     employees.forEach((employee: any) => {
       const variantContent = message.variants[employee.preferredVariant] || message.baseContent;
 
+      // Convert markdown to HTML
+      const htmlContent = markdownToHtml(variantContent);
+
       // Add AI disclaimer
       const disclaimer = `
 
@@ -71,12 +75,12 @@ export async function POST(request: NextRequest) {
   </p>
 </div>`;
 
-      const bodyWithDisclaimer = variantContent + disclaimer;
+      const bodyWithDisclaimer = htmlContent + disclaimer;
 
       const email: Email = {
         id: `${message.id}-${employee.id}`,
-        from: 'admin@company.com',
-        fromName: 'Komunikator Firmowy',
+        from: 'internalcomms@chrisrapacz.com',
+        fromName: 'Internal Comms',
         subject: message.subject,
         body: bodyWithDisclaimer,
         timestamp: new Date(),

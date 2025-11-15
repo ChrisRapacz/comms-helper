@@ -181,7 +181,7 @@ export default function EmployeeInboxPage() {
                 <p className="text-sm text-indigo-900 mb-2 font-semibold">
                   Następujący prompt jest używany przez AI do generowania wiadomości w Twoim stylu:
                 </p>
-                <div className="bg-white rounded p-4 text-sm text-gray-700 font-mono whitespace-pre-wrap border border-indigo-100 max-h-48 overflow-y-auto">
+                <div className="bg-white rounded p-4 text-sm text-gray-700 font-mono whitespace-pre-wrap border border-indigo-100">
                   {DEFAULT_PROMPTS[employee.preferredVariant]}
                 </div>
               </div>
@@ -352,7 +352,7 @@ export default function EmployeeInboxPage() {
                         <p className={`text-sm break-words line-clamp-1 ${!email.read ? 'font-semibold text-gray-900' : 'text-gray-700'}`}>
                           {email.subject}
                         </p>
-                        <p className="text-xs md:text-sm text-gray-600 line-clamp-2 break-words mt-1 overflow-wrap-anywhere">
+                        <p className="text-xs md:text-sm text-gray-600 line-clamp-2 break-words mt-1 overflow-wrap-anywhere text-justify">
                           {email.body.replace(/<[^>]*>/g, '').substring(0, 100)}...
                         </p>
                         {email.variant && !email.isDemo && (
@@ -395,9 +395,21 @@ export default function EmployeeInboxPage() {
                       {selectedEmail.subject}
                     </h1>
                   <div className="flex items-start space-x-3 md:space-x-4 pb-4 border-b border-gray-200">
-                    <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold flex-shrink-0">
-                      {selectedEmail.fromName.charAt(0)}
-                    </div>
+                    {!selectedEmail.isDemo && selectedEmail.from === 'internalcomms@chrisrapacz.com' ? (
+                      <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                        <Image
+                          src="https://chrisrapacz.com/img/profile2.png"
+                          alt="Chris Rapacz"
+                          width={40}
+                          height={40}
+                          className="object-cover"
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold flex-shrink-0">
+                        {selectedEmail.fromName.charAt(0)}
+                      </div>
+                    )}
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-col gap-1">
                         <div className="font-semibold text-gray-900 break-words">
@@ -434,7 +446,7 @@ export default function EmployeeInboxPage() {
 
                 <div className="prose max-w-none">
                   <div
-                    className="whitespace-pre-wrap text-gray-800 leading-relaxed break-words overflow-wrap-anywhere"
+                    className="whitespace-pre-wrap text-gray-800 leading-relaxed break-words overflow-wrap-anywhere text-justify"
                     dangerouslySetInnerHTML={{ __html: selectedEmail.body }}
                   />
                 </div>
