@@ -341,23 +341,23 @@ export default function EmployeeInboxPage() {
                     <div className="flex items-start space-x-2 md:space-x-3 max-w-full">
                       <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${!email.read ? 'bg-blue-600' : 'bg-transparent'}`} />
                       <div className="flex-1 min-w-0 overflow-hidden">
-                        <div className="flex items-baseline justify-between mb-1 gap-2">
-                          <span className={`font-semibold text-gray-900 truncate flex-1 ${!email.read ? 'font-bold' : ''}`}>
+                        <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-1 gap-1">
+                          <span className={`font-semibold text-gray-900 break-words ${!email.read ? 'font-bold' : ''}`}>
                             {email.fromName}
                           </span>
-                          <span className="text-xs text-gray-500 flex-shrink-0">
+                          <span className="text-xs text-gray-500 flex-shrink-0 sm:ml-2">
                             {format(new Date(email.timestamp), 'd MMM', { locale: pl })}
                           </span>
                         </div>
-                        <p className={`text-sm truncate break-words ${!email.read ? 'font-semibold text-gray-900' : 'text-gray-700'}`}>
+                        <p className={`text-sm break-words line-clamp-1 ${!email.read ? 'font-semibold text-gray-900' : 'text-gray-700'}`}>
                           {email.subject}
                         </p>
-                        <p className="text-xs md:text-sm text-gray-600 line-clamp-2 break-words mt-1">
+                        <p className="text-xs md:text-sm text-gray-600 line-clamp-2 break-words mt-1 overflow-wrap-anywhere">
                           {email.body.replace(/<[^>]*>/g, '').substring(0, 100)}...
                         </p>
                         {email.variant && !email.isDemo && (
                           <div className="mt-2">
-                            <span className="inline-block px-2 py-0.5 bg-green-100 text-green-800 rounded text-xs">
+                            <span className="inline-block px-2 py-0.5 bg-green-100 text-green-800 rounded text-xs break-words">
                               {variantConfig?.icon} Dopasowano do Twoich preferencji
                             </span>
                           </div>
@@ -391,24 +391,22 @@ export default function EmployeeInboxPage() {
 
                 <div className="p-4 md:p-8 flex-1 overflow-y-auto">
                   <div className="mb-6">
-                    <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
+                    <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-4 break-words">
                       {selectedEmail.subject}
                     </h1>
-                  <div className="flex items-start space-x-4 pb-4 border-b border-gray-200">
-                    <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
+                  <div className="flex items-start space-x-3 md:space-x-4 pb-4 border-b border-gray-200">
+                    <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold flex-shrink-0">
                       {selectedEmail.fromName.charAt(0)}
                     </div>
-                    <div className="flex-1">
-                      <div className="flex items-baseline justify-between">
-                        <div>
-                          <div className="font-semibold text-gray-900">
-                            {selectedEmail.fromName}
-                          </div>
-                          <div className="text-sm text-gray-600">
-                            {selectedEmail.from}
-                          </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-col gap-1">
+                        <div className="font-semibold text-gray-900 break-words">
+                          {selectedEmail.fromName}
                         </div>
-                        <div className="text-sm text-gray-500">
+                        <div className="text-sm text-gray-600 break-all">
+                          {selectedEmail.from}
+                        </div>
+                        <div className="text-xs md:text-sm text-gray-500 mt-1">
                           {format(new Date(selectedEmail.timestamp), 'd MMMM yyyy, HH:mm', {
                             locale: pl,
                           })}
@@ -436,7 +434,7 @@ export default function EmployeeInboxPage() {
 
                 <div className="prose max-w-none">
                   <div
-                    className="whitespace-pre-wrap text-gray-800 leading-relaxed"
+                    className="whitespace-pre-wrap text-gray-800 leading-relaxed break-words overflow-wrap-anywhere"
                     dangerouslySetInnerHTML={{ __html: selectedEmail.body }}
                   />
                 </div>
