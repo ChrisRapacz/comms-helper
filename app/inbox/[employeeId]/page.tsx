@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { useInboxStore } from '@/lib/store';
 import { getEmployeeById } from '@/lib/personas';
 import { Email } from '@/lib/types';
@@ -23,6 +23,11 @@ export default function EmployeeInboxPage() {
   const [showPreferencesModal, setShowPreferencesModal] = useState(false);
   const [showMobileEmailView, setShowMobileEmailView] = useState(false);
   const emails = getEmployeeEmails(employeeId);
+
+  // Refs to preserve scroll position in modals during re-renders
+  const preferencesScrollRef = useRef<HTMLDivElement>(null);
+  const originalScrollRef = useRef<HTMLDivElement>(null);
+  const scrollPositionRef = useRef({ preferences: 0, original: 0 });
 
   // Fetch data from server on mount and set up polling
   useEffect(() => {
@@ -55,6 +60,31 @@ export default function EmployeeInboxPage() {
     document.addEventListener('click', handleLinkClick);
     return () => document.removeEventListener('click', handleLinkClick);
   }, []);
+
+  // Preserve scroll position in modals during polling re-renders
+  useEffect(() => {
+    // Restore scroll position for preferences modal
+    if (showPreferencesModal && preferencesScrollRef.current) {
+      preferencesScrollRef.current.scrollTop = scrollPositionRef.current.preferences;
+    }
+    // Restore scroll position for original modal
+    if (showOriginalModal && originalScrollRef.current) {
+      originalScrollRef.current.scrollTop = scrollPositionRef.current.original;
+    }
+  });
+
+  // Save scroll position on scroll
+  const handlePreferencesScroll = () => {
+    if (preferencesScrollRef.current) {
+      scrollPositionRef.current.preferences = preferencesScrollRef.current.scrollTop;
+    }
+  };
+
+  const handleOriginalScroll = () => {
+    if (originalScrollRef.current) {
+      scrollPositionRef.current.original = originalScrollRef.current.scrollTop;
+    }
+  };
 
   if (!employee) {
     return (
@@ -108,7 +138,11 @@ export default function EmployeeInboxPage() {
             </p>
           </div>
 
-          <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 max-w-full">
+          <div
+            ref={originalScrollRef}
+            onScroll={handleOriginalScroll}
+            className="flex-1 overflow-y-auto overflow-x-hidden p-6 max-w-full"
+          >
             <div className="bg-gray-50 rounded-lg p-6 border border-gray-200 max-w-full overflow-x-hidden">
               <h3 className="font-semibold text-gray-900 mb-4 break-words">{selectedEmail.subject}</h3>
               <div className="whitespace-pre-wrap text-gray-800 leading-relaxed break-words overflow-wrap-anywhere max-w-full">
@@ -149,7 +183,11 @@ export default function EmployeeInboxPage() {
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto overflow-x-hidden p-6 space-y-6 max-w-full">
+          <div
+            ref={preferencesScrollRef}
+            onScroll={handlePreferencesScroll}
+            className="flex-1 overflow-y-auto overflow-x-hidden p-6 space-y-6 max-w-full"
+          >
             <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200 max-w-full overflow-x-hidden">
               <div className="flex items-start space-x-4 max-w-full">
                 <span className="text-4xl flex-shrink-0">{variantConfig?.icon}</span>
