@@ -18,7 +18,29 @@ export default function EmployeeInboxPage() {
   const { getEmployeeEmails, markEmailAsRead } = useInboxStore();
 
   const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
+  const [showOriginalModal, setShowOriginalModal] = useState(false);
+  const [showPreferencesModal, setShowPreferencesModal] = useState(false);
   const emails = getEmployeeEmails(employeeId);
+
+  // Handle clicks on links in email body
+  useEffect(() => {
+    const handleLinkClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'A') {
+        const href = target.getAttribute('href');
+        if (href?.startsWith('#view-original')) {
+          e.preventDefault();
+          setShowOriginalModal(true);
+        } else if (href?.startsWith('#change-preferences')) {
+          e.preventDefault();
+          setShowPreferencesModal(true);
+        }
+      }
+    };
+
+    document.addEventListener('click', handleLinkClick);
+    return () => document.removeEventListener('click', handleLinkClick);
+  }, []);
 
   if (!employee) {
     return (
@@ -45,8 +67,120 @@ export default function EmployeeInboxPage() {
   const unreadCount = emails.filter(e => !e.read).length;
   const variantConfig = getVariantConfig(employee.preferredVariant);
 
+  // Original Message Modal
+  const OriginalMessageModal = () => {
+    if (!showOriginalModal || !selectedEmail?.originalContent) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="bg-white rounded-lg shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-gray-900">📄 Oryginalna wiadomość</h2>
+              <button
+                onClick={() => setShowOriginalModal(false)}
+                className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
+              >
+                ×
+              </button>
+            </div>
+            <p className="text-sm text-gray-600 mt-2">
+              Tak wyglądała wiadomość przed dopasowaniem do Twoich preferencji
+            </p>
+          </div>
+
+          <div className="flex-1 overflow-y-auto p-6">
+            <div className="bg-gray-50 rounded-lg p-6 border border-gray-200">
+              <h3 className="font-semibold text-gray-900 mb-4">{selectedEmail.subject}</h3>
+              <div className="whitespace-pre-wrap text-gray-800 leading-relaxed">
+                {selectedEmail.originalContent}
+              </div>
+            </div>
+          </div>
+
+          <div className="p-6 border-t border-gray-200 flex justify-end">
+            <button
+              onClick={() => setShowOriginalModal(false)}
+              className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-semibold"
+            >
+              Zamknij
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Preferences Modal
+  const PreferencesModal = () => {
+    if (!showPreferencesModal) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="bg-white rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-gray-900">⚙️ Twoje preferencje komunikacyjne</h2>
+              <button
+                onClick={() => setShowPreferencesModal(false)}
+                className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
+              >
+                ×
+              </button>
+            </div>
+          </div>
+
+          <div className="flex-1 overflow-y-auto p-6 space-y-6">
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200">
+              <div className="flex items-start space-x-4">
+                <span className="text-4xl">{variantConfig?.icon}</span>
+                <div>
+                  <h3 className="text-xl font-bold text-blue-900 mb-2">
+                    {variantConfig?.name}
+                  </h3>
+                  <p className="text-blue-700 mb-4">
+                    {variantConfig?.description}
+                  </p>
+                  <div className="bg-white bg-opacity-50 rounded p-3 text-sm text-blue-900">
+                    <strong>Twój profil:</strong> {employee.persona}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <h4 className="font-semibold text-gray-900">📋 Szczegóły dopasowania:</h4>
+              <div className="bg-gray-50 rounded-lg p-4 space-y-2 text-sm text-gray-700">
+                <p><strong>Pokolenie:</strong> {employee.generation}</p>
+                <p><strong>Opis preferencji:</strong> {employee.description}</p>
+              </div>
+            </div>
+
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+              <p className="text-sm text-yellow-900">
+                <strong>💡 Informacja:</strong> To jest funkcja demonstracyjna. W rzeczywistej implementacji
+                możesz tutaj umieścić formularz do zmiany preferencji komunikacyjnych.
+              </p>
+            </div>
+          </div>
+
+          <div className="p-6 border-t border-gray-200 flex justify-end">
+            <button
+              onClick={() => setShowPreferencesModal(false)}
+              className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 font-semibold"
+            >
+              Zamknij
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gray-100">
+      <OriginalMessageModal />
+      <PreferencesModal />
       {/* Gmail-like header */}
       <header className="bg-white border-b border-gray-200 px-6 py-3">
         <div className="flex items-center justify-between">
@@ -234,9 +368,20 @@ export default function EmployeeInboxPage() {
                 )}
 
                 <div className="prose max-w-none">
-                  <div className="whitespace-pre-wrap text-gray-800 leading-relaxed">
-                    {selectedEmail.body}
-                  </div>
+                  <div
+                    className="whitespace-pre-wrap text-gray-800 leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: selectedEmail.body }}
+                  />
+                </div>
+
+                {/* Button to view preferences (alternative to link in disclaimer) */}
+                <div className="mt-6 pt-6 border-t border-gray-200">
+                  <button
+                    onClick={() => setShowPreferencesModal(true)}
+                    className="text-sm text-indigo-600 hover:text-indigo-700"
+                  >
+                    ℹ️ Zobacz dlaczego otrzymałeś tę wersję wiadomości
+                  </button>
                 </div>
               </div>
             ) : (

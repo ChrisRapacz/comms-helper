@@ -32,16 +32,33 @@ export const useInboxStore = create<InboxState>((set, get) => {
       state.employees.forEach(employee => {
         const variantContent = message.variants[employee.preferredVariant] || message.baseContent;
 
+        // Add AI disclaimer to the email body
+        const disclaimer = `
+
+---
+
+<div style="background: #f3f4f6; border-left: 4px solid #6366f1; padding: 12px; margin-top: 24px; font-size: 13px; color: #4b5563;">
+  <p style="margin: 0 0 8px 0;"><strong>🤖 Ta wiadomość została automatycznie dopasowana do Twoich preferencji komunikacyjnych</strong></p>
+  <p style="margin: 0;">
+    <a href="#view-original-${messageId}" style="color: #6366f1; text-decoration: none;">📄 Zobacz oryginalną wersję wiadomości</a> |
+    <a href="#change-preferences" style="color: #6366f1; text-decoration: none;">⚙️ Zmień swoje preferencje</a>
+  </p>
+</div>`;
+
+        const bodyWithDisclaimer = variantContent + disclaimer;
+
         const email: Email = {
           id: `${messageId}-${employee.id}`,
           from: 'admin@company.com',
           fromName: 'Komunikator Firmowy',
           subject: message.subject,
-          body: variantContent,
+          body: bodyWithDisclaimer,
           timestamp: new Date(),
           read: false,
           variant: employee.preferredVariant,
           isDemo: false,
+          originalContent: message.baseContent,
+          messageId: messageId,
         };
 
         newEmails[employee.id] = [email, ...(newEmails[employee.id] || [])];

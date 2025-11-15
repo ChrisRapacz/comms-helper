@@ -1,10 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Link from 'next/link';
 import { useInboxStore } from '@/lib/store';
 import { MESSAGE_VARIANTS } from '@/lib/variants';
 import { Message, MessageVariant } from '@/lib/types';
+import { MESSAGE_TEMPLATES } from '@/lib/templates';
+import { DEFAULT_PROMPTS, BASE_PROMPT } from '@/lib/prompts';
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -20,6 +22,11 @@ export default function AdminPage() {
   const [currentMessage, setCurrentMessage] = useState<Message | null>(null);
   const [editedVariants, setEditedVariants] = useState<Record<MessageVariant, string>>({} as Record<MessageVariant, string>);
   const [activeVariant, setActiveVariant] = useState<MessageVariant>('base');
+  const [selectedTemplate, setSelectedTemplate] = useState<string>('');
+  const [showPromptEditor, setShowPromptEditor] = useState(false);
+  const [customPrompts, setCustomPrompts] = useState<Record<MessageVariant, string>>(DEFAULT_PROMPTS);
+  const [customBasePrompt, setCustomBasePrompt] = useState<string>(BASE_PROMPT);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { addMessage, sendMessage } = useInboxStore();
 
@@ -106,6 +113,28 @@ export default function AdminPage() {
     );
   }
 
+  const handleTemplateSelect = (templateId: string) => {
+    const template = MESSAGE_TEMPLATES.find(t => t.id === templateId);
+    if (template) {
+      setSubject(template.subject);
+      setKeyPoints(template.content);
+      setSelectedTemplate(templateId);
+    }
+  };
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const text = event.target?.result as string;
+        setKeyPoints(text);
+        setSelectedTemplate('');
+      };
+      reader.readAsText(file);
+    }
+  };
+
   const handleGenerate = async () => {
     if (!keyPoints.trim() || !subject.trim()) {
       setError('Proszę wypełnić wszystkie pola');
@@ -119,7 +148,11 @@ export default function AdminPage() {
       const response = await fetch('/api/generate-variants', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ keyPoints }),
+        body: JSON.stringify({
+          keyPoints,
+          customPrompts,
+          basePrompt: customBasePrompt,
+        }),
       });
 
       if (!response.ok) {
@@ -293,8 +326,92 @@ export default function AdminPage() {
     );
   }
 
+  // Prompt Editor Modal
+  const PromptEditorModal = () => {
+    if (!showPromptEditor) return null;
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="bg-white rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex justify-between items-center">
+              <h2 className="text-2xl font-bold text-gray-900">⚙️ Edytor promptów AI</h2>
+              <button
+                onClick={() => setShowPromptEditor(false)}
+                className="text-gray-500 hover:text-gray-700 text-2xl font-bold"
+              >
+                ×
+              </button>
+            </div>
+            <p className="text-sm text-gray-600 mt-2">
+              Dostosuj prompty dla każdego wariantu. Użyj <code className="bg-gray-100 px-1 rounded">{'{baseContent}'}</code> jako placeholder dla bazowej treści.
+            </p>
+          </div>
+
+          <div className="flex-1 overflow-y-auto p-6 space-y-4">
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                🔹 Prompt bazowy (generuje pierwszą wersję)
+              </label>
+              <textarea
+                value={customBasePrompt}
+                onChange={(e) => setCustomBasePrompt(e.target.value)}
+                className="w-full h-32 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono text-sm text-gray-900"
+                placeholder="Użyj {keyPoints} jako placeholder"
+              />
+            </div>
+
+            <div className="border-t border-gray-200 pt-4">
+              <h3 className="font-semibold text-gray-900 mb-4">Prompty dla wariantów</h3>
+              <div className="space-y-4">
+                {MESSAGE_VARIANTS.map((variant) => (
+                  <div key={variant.id}>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      {variant.icon} {variant.name}
+                      <span className="text-gray-500 font-normal ml-2 text-xs">
+                        ({variant.description})
+                      </span>
+                    </label>
+                    <textarea
+                      value={customPrompts[variant.id]}
+                      onChange={(e) => setCustomPrompts(prev => ({
+                        ...prev,
+                        [variant.id]: e.target.value
+                      }))}
+                      className="w-full h-24 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent font-mono text-sm text-gray-900"
+                      placeholder={`Prompt dla wariantu ${variant.name}`}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="p-6 border-t border-gray-200 flex justify-between">
+            <button
+              onClick={() => {
+                setCustomPrompts(DEFAULT_PROMPTS);
+                setCustomBasePrompt(BASE_PROMPT);
+              }}
+              className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 font-semibold"
+            >
+              🔄 Resetuj do domyślnych
+            </button>
+            <button
+              onClick={() => setShowPromptEditor(false)}
+              className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 font-semibold"
+            >
+              ✅ Zapisz i zamknij
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 p-8">
+      <PromptEditorModal />
       <div className="max-w-3xl mx-auto">
         <div className="mb-8">
           <Link href="/inbox" className="text-indigo-600 hover:text-indigo-700 text-sm">
@@ -303,13 +420,21 @@ export default function AdminPage() {
         </div>
 
         <div className="bg-white rounded-lg shadow-lg p-8">
-          <div className="mb-6">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
-              Panel Komunikatora
-            </h1>
-            <p className="text-gray-600">
-              Wprowadź kluczowe informacje, a AI wygeneruje 12 spersonalizowanych wariantów komunikatu.
-            </p>
+          <div className="mb-6 flex justify-between items-start">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                Panel Komunikatora
+              </h1>
+              <p className="text-gray-600">
+                Wprowadź kluczowe informacje, a AI wygeneruje 14 spersonalizowanych wariantów komunikatu.
+              </p>
+            </div>
+            <button
+              onClick={() => setShowPromptEditor(!showPromptEditor)}
+              className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-sm font-semibold"
+            >
+              ⚙️ Edytuj prompty AI
+            </button>
           </div>
 
           {error && (
@@ -319,6 +444,46 @@ export default function AdminPage() {
           )}
 
           <div className="space-y-6">
+            {/* Template selector and file upload */}
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  📋 Wybierz szablon
+                </label>
+                <select
+                  value={selectedTemplate}
+                  onChange={(e) => handleTemplateSelect(e.target.value)}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
+                >
+                  <option value="">-- Wybierz gotowy szablon --</option>
+                  {MESSAGE_TEMPLATES.map(template => (
+                    <option key={template.id} value={template.id}>
+                      {template.title}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  📁 Lub wgraj plik tekstowy
+                </label>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".txt"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                />
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-full p-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-indigo-500 hover:bg-indigo-50 transition-colors text-gray-700 font-semibold"
+                >
+                  Kliknij aby wybrać plik .txt
+                </button>
+              </div>
+            </div>
+
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Temat wiadomości
@@ -343,7 +508,7 @@ export default function AdminPage() {
                 className="w-full h-48 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
               />
               <p className="mt-2 text-sm text-gray-500">
-                Im więcej szczegółów podasz, tym lepsze będą wygenerowane warianty.
+                Im więcej szczegółów podasz, tym lepsze będą wygenerowane warianty. {selectedTemplate && '✅ Załadowano szablon'}
               </p>
             </div>
 

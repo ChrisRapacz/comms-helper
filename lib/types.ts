@@ -43,6 +43,8 @@ export interface Email {
   read: boolean;
   variant?: MessageVariant;
   isDemo?: boolean;
+  originalContent?: string; // Original base message content
+  messageId?: string; // Reference to the Message that created this email
 }
 
 export interface Message {

@@ -4,7 +4,7 @@ import { MESSAGE_VARIANTS } from '@/lib/variants';
 
 export async function POST(request: NextRequest) {
   try {
-    const { keyPoints } = await request.json();
+    const { keyPoints, customPrompts, basePrompt } = await request.json();
 
     if (!keyPoints) {
       return NextResponse.json(
@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
     });
 
     // First, generate the base content
-    const basePrompt = `Jesteś ekspertem od komunikacji wewnętrznej w firmie. Na podstawie poniższych kluczowych informacji napisz profesjonalny komunikat firmowy w języku polskim.
+    const defaultBasePrompt = `Jesteś ekspertem od komunikacji wewnętrznej w firmie. Na podstawie poniższych kluczowych informacji napisz profesjonalny komunikat firmowy w języku polskim.
 
 Kluczowe informacje:
 ${keyPoints}
@@ -40,10 +40,14 @@ Wytyczne:
 
 Napisz tylko treść komunikatu, bez tytułu czy nagłówków.`;
 
+    const finalBasePrompt = basePrompt
+      ? basePrompt.replace('{keyPoints}', keyPoints)
+      : defaultBasePrompt;
+
     const baseResponse = await anthropic.messages.create({
       model: 'claude-sonnet-4-5-20250929',
       max_tokens: 1024,
-      messages: [{ role: 'user', content: basePrompt }],
+      messages: [{ role: 'user', content: finalBasePrompt }],
     });
 
     const baseContent = baseResponse.content[0].type === 'text'
@@ -52,7 +56,7 @@ Napisz tylko treść komunikatu, bez tytułu czy nagłówków.`;
 
     // Generate variants in parallel
     const variantPromises = MESSAGE_VARIANTS.map(async (variant) => {
-      const variantPrompt = getVariantPrompt(variant.id, baseContent);
+      const variantPrompt = getVariantPrompt(variant.id, baseContent, customPrompts);
 
       const response = await anthropic.messages.create({
         model: 'claude-sonnet-4-5-20250929',
@@ -91,7 +95,12 @@ Napisz tylko treść komunikatu, bez tytułu czy nagłówków.`;
   }
 }
 
-function getVariantPrompt(variantId: string, baseContent: string): string {
+function getVariantPrompt(variantId: string, baseContent: string, customPrompts?: Record<string, string>): string {
+  // Use custom prompts if provided
+  if (customPrompts && customPrompts[variantId]) {
+    return customPrompts[variantId].replace('{baseContent}', baseContent);
+  }
+
   const prompts: Record<string, string> = {
     base: `Przekaż następujący komunikat w standardowym, wyważonym formacie:\n\n${baseContent}`,
 
