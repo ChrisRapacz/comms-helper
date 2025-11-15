@@ -605,12 +605,20 @@ export default function AdminPage() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                   </svg>
-                  Generowanie wariantów...
+                  Generowanie wariantów (60-90s)...
                 </span>
               ) : (
                 '✨ Wygeneruj warianty komunikatu'
               )}
             </button>
+
+            {loading && (
+              <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                <p className="text-sm text-yellow-900">
+                  ⏱️ <strong>Proszę czekać...</strong> Generowanie 15 wysokiej jakości wariantów z użyciem Claude Sonnet trwa 60-90 sekund. Nie zamykaj tej strony.
+                </p>
+              </div>
+            )}
           </div>
 
           <div className="mt-8 p-6 bg-indigo-50 rounded-lg">
@@ -624,7 +632,7 @@ export default function AdminPage() {
               </li>
               <li className="flex items-start">
                 <span className="font-semibold mr-2">2.</span>
-                <span>Stworzy 12 wariantów dopasowanych do różnych preferencji</span>
+                <span>Stworzy 15 wariantów dopasowanych do różnych preferencji (60-90 sekund)</span>
               </li>
               <li className="flex items-start">
                 <span className="font-semibold mr-2">3.</span>
