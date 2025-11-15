@@ -64,13 +64,13 @@ Napisz tylko treść komunikatu, bez tytułu czy nagłówków.`;
         : '';
     }
 
-    // Generate variants in parallel using Haiku (faster and cheaper for simple transformations)
+    // Generate variants in parallel using Sonnet for maximum quality
     const variantPromises = MESSAGE_VARIANTS.map(async (variant) => {
       const variantPrompt = getVariantPrompt(variant.id, baseContent, customPrompts);
 
       const response = await anthropic.messages.create({
-        model: 'claude-haiku-4-20250514', // Use Haiku for faster responses
-        max_tokens: 800, // Reduced from 1024
+        model: 'claude-sonnet-4-5-20250929', // Use Sonnet for best quality
+        max_tokens: 1024,
         messages: [{ role: 'user', content: variantPrompt }],
       });
 
