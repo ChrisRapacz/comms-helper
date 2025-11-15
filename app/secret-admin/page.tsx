@@ -146,6 +146,7 @@ export default function AdminPage() {
     setError('');
 
     try {
+      console.log('Starting variant generation...');
       const response = await fetch('/api/generate-variants', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -157,11 +158,16 @@ export default function AdminPage() {
         }),
       });
 
+      console.log('Response status:', response.status);
+
       if (!response.ok) {
-        throw new Error('Failed to generate variants');
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Server error:', errorData);
+        throw new Error(errorData.error || `Server error: ${response.status}`);
       }
 
       const data = await response.json();
+      console.log('Variants generated successfully');
 
       const message: Message = {
         id: `msg-${Date.now()}`,
@@ -178,6 +184,7 @@ export default function AdminPage() {
       setEditedVariants(data.variants);
       setStep('editing');
     } catch (err: any) {
+      console.error('Generation error:', err);
       setError(err.message || 'Wystąpił błąd podczas generowania wariantów');
     } finally {
       setLoading(false);
