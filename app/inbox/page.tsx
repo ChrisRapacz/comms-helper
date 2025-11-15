@@ -26,12 +26,6 @@ export default function InboxLoginPage() {
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-6xl mx-auto">
         <div className="mb-8">
-          <Link href="/" className="text-indigo-600 hover:text-indigo-700 text-sm">
-            ← Powrót do strony głównej
-          </Link>
-        </div>
-
-        <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">
             Skrzynka Pracownika
           </h1>

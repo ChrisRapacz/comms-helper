@@ -1,6 +1,6 @@
 'use client';
 
-import { use, useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useInboxStore } from '@/lib/store';
 import { getEmployeeById } from '@/lib/personas';
 import { Email } from '@/lib/types';
@@ -9,13 +9,11 @@ import { pl } from 'date-fns/locale';
 import Link from 'next/link';
 import Image from 'next/image';
 import { getVariantConfig } from '@/lib/variants';
+import { useParams } from 'next/navigation';
 
-export default function EmployeeInboxPage({
-  params,
-}: {
-  params: Promise<{ employeeId: string }>;
-}) {
-  const { employeeId } = use(params);
+export default function EmployeeInboxPage() {
+  const params = useParams();
+  const employeeId = params.employeeId as string;
   const employee = useMemo(() => getEmployeeById(employeeId), [employeeId]);
   const { getEmployeeEmails, markEmailAsRead } = useInboxStore();
 

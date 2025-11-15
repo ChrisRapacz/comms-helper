@@ -189,7 +189,7 @@ export default function AdminPage() {
                 <textarea
                   value={editedVariants[activeVariant] || ''}
                   onChange={(e) => handleEditVariant(activeVariant, e.target.value)}
-                  className="w-full h-96 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-mono text-sm"
+                  className="w-full h-96 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent font-mono text-sm text-gray-900"
                   placeholder="Treść wariantu..."
                 />
                 <div className="mt-4 p-4 bg-blue-50 rounded-lg">
@@ -209,8 +209,8 @@ export default function AdminPage() {
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-3xl mx-auto">
         <div className="mb-8">
-          <Link href="/" className="text-indigo-600 hover:text-indigo-700 text-sm">
-            ← Powrót do strony głównej
+          <Link href="/inbox" className="text-indigo-600 hover:text-indigo-700 text-sm">
+            ← Powrót do panelu pracowników
           </Link>
         </div>
 
@@ -240,7 +240,7 @@ export default function AdminPage() {
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
                 placeholder="np. Nowa polityka pracy zdalnej"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
               />
             </div>
 
@@ -252,7 +252,7 @@ export default function AdminPage() {
                 value={keyPoints}
                 onChange={(e) => setKeyPoints(e.target.value)}
                 placeholder="Opisz co chcesz zakomunikować, np.:&#10;- Od stycznia 2025 nowa polityka pracy zdalnej&#10;- 3 dni w biurze, 2 dni zdalnie&#10;- Elastyczne godziny pracy 7:00-10:00&#10;- Szczegóły w intranecie"
-                className="w-full h-48 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                className="w-full h-48 p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
               />
               <p className="mt-2 text-sm text-gray-500">
                 Im więcej szczegółów podasz, tym lepsze będą wygenerowane warianty.
