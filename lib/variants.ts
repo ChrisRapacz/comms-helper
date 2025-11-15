@@ -73,6 +73,18 @@ export const MESSAGE_VARIANTS: MessageVariantConfig[] = [
     description: 'Skupiony na liczbach, faktach i konkretach',
     icon: '📊',
   },
+  {
+    id: 'english',
+    name: 'English',
+    description: 'Translated to English for English-speaking employees',
+    icon: '🇬🇧',
+  },
+  {
+    id: 'staropolski',
+    name: 'Staropolski',
+    description: 'W imitacji staropolszczyzny, zaczynający się od "Mocium Panie,"',
+    icon: '📜',
+  },
 ];
 
 export function getVariantConfig(variantId: string): MessageVariantConfig | undefined {

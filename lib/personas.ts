@@ -133,6 +133,28 @@ export const EMPLOYEES: Employee[] = [
     preferredVariant: 'base',
     generation: 'Gen X',
   },
+  {
+    id: 'emp-13',
+    firstName: 'John',
+    lastName: 'Johnson',
+    fullName: 'John Johnson',
+    persona: 'English-speaking expat',
+    description: 'Jedyny anglojęzyczny pracownik. Wszystkie komunikaty muszą być przetłumaczone na angielski.',
+    avatarUrl: 'https://i.pravatar.cc/150?img=33',
+    preferredVariant: 'english',
+    generation: 'Millennial',
+  },
+  {
+    id: 'emp-14',
+    firstName: 'Dziwny',
+    lastName: 'Mariusz',
+    fullName: 'Dziwny Mariusz',
+    persona: 'Miłośnik staropolszczyzny',
+    description: 'Oczekuje komunikatów w imitacji staropolszczyzny, zawsze zaczynających się od "Mocium Panie,".',
+    avatarUrl: 'https://i.pravatar.cc/150?img=52',
+    preferredVariant: 'staropolski',
+    generation: 'Gen X',
+  },
 ];
 
 export function getEmployeeById(id: string): Employee | undefined {

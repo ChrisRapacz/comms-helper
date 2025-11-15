@@ -10,7 +10,9 @@ export type MessageVariant =
   | 'visual'
   | 'formal'
   | 'casual'
-  | 'data-driven';
+  | 'data-driven'
+  | 'english'
+  | 'staropolski';
 
 export interface MessageVariantConfig {
   id: MessageVariant;

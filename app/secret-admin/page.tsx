@@ -7,6 +7,11 @@ import { MESSAGE_VARIANTS } from '@/lib/variants';
 import { Message, MessageVariant } from '@/lib/types';
 
 export default function AdminPage() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [password, setPassword] = useState('');
+  const [authError, setAuthError] = useState('');
+  const [authLoading, setAuthLoading] = useState(false);
+
   const [step, setStep] = useState<'input' | 'editing' | 'sent'>('input');
   const [keyPoints, setKeyPoints] = useState('');
   const [subject, setSubject] = useState('');
@@ -17,6 +22,89 @@ export default function AdminPage() {
   const [activeVariant, setActiveVariant] = useState<MessageVariant>('base');
 
   const { addMessage, sendMessage } = useInboxStore();
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthLoading(true);
+    setAuthError('');
+
+    try {
+      const response = await fetch('/api/admin-auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      });
+
+      if (response.ok) {
+        setIsAuthenticated(true);
+        setPassword('');
+      } else {
+        setAuthError('Nieprawidłowe hasło');
+      }
+    } catch (err) {
+      setAuthError('Błąd logowania');
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  // Show login form if not authenticated
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100 flex items-center justify-center p-4">
+        <div className="max-w-md w-full">
+          <div className="bg-white rounded-2xl shadow-xl p-8">
+            <div className="text-center mb-8">
+              <div className="text-6xl mb-4">🔒</div>
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                Panel Administratora
+              </h1>
+              <p className="text-gray-600">
+                Wprowadź hasło aby kontynuować
+              </p>
+            </div>
+
+            <form onSubmit={handleLogin} className="space-y-4">
+              {authError && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+                  {authError}
+                </div>
+              )}
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Hasło
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-900"
+                  placeholder="Wprowadź hasło..."
+                  autoFocus
+                  required
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={authLoading}
+                className="w-full py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 disabled:bg-gray-400 disabled:cursor-not-allowed font-semibold transition-colors"
+              >
+                {authLoading ? 'Sprawdzanie...' : 'Zaloguj się'}
+              </button>
+            </form>
+
+            <div className="mt-6 text-center">
+              <Link href="/inbox" className="text-sm text-gray-600 hover:text-gray-900">
+                ← Powrót do panelu pracowników
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const handleGenerate = async () => {
     if (!keyPoints.trim() || !subject.trim()) {

@@ -116,6 +116,10 @@ function getVariantPrompt(variantId: string, baseContent: string): string {
     casual: `Przepisz następujący komunikat w przyjaznym, konwersacyjnym tonie - jakby pisał kolega. Zachowaj profesjonalizm ale bądź luźniejszy:\n\n${baseContent}`,
 
     'data-driven': `Przepisz następujący komunikat skupiając się na konkretach - liczbach, datach, faktach. Dodaj konkretne dane gdzie możliwe (nawet jeśli szacunkowe):\n\n${baseContent}`,
+
+    english: `Translate the following message to English. Maintain a professional business tone suitable for corporate communication:\n\n${baseContent}`,
+
+    staropolski: `Przepisz następujący komunikat w imitacji staropolszczyzny (XVI-XVII wiek). KONIECZNIE zacznij od "Mocium Panie," i używaj archaicznych form, takich jak: "iżby", "acz", "niezmiernie", "raczyć", "pojąć", itd. Zachowaj profesjonalny charakter komunikacji firmowej, ale w staropolskim stylu:\n\n${baseContent}`,
   };
 
   return prompts[variantId] || prompts.base;
