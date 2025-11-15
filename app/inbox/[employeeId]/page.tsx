@@ -184,7 +184,7 @@ export default function EmployeeInboxPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-gray-100 overflow-x-hidden max-w-full">
       <OriginalMessageModal />
       <PreferencesModal />
       {/* Gmail-like header */}
@@ -303,26 +303,26 @@ export default function EmployeeInboxPage() {
                   <button
                     key={email.id}
                     onClick={() => handleEmailClick(email)}
-                    className={`w-full text-left p-4 hover:shadow-md transition-all ${
+                    className={`w-full text-left p-3 md:p-4 hover:shadow-md transition-all overflow-hidden ${
                       selectedEmail?.id === email.id ? 'bg-blue-50 border-l-4 border-blue-500' : ''
                     } ${!email.read ? 'bg-white' : 'bg-gray-50'}`}
                   >
-                    <div className="flex items-start space-x-3">
-                      <div className={`w-2 h-2 rounded-full mt-2 ${!email.read ? 'bg-blue-600' : 'bg-transparent'}`} />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-baseline justify-between mb-1">
-                          <span className={`font-semibold text-gray-900 truncate ${!email.read ? 'font-bold' : ''}`}>
+                    <div className="flex items-start space-x-2 md:space-x-3 max-w-full">
+                      <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${!email.read ? 'bg-blue-600' : 'bg-transparent'}`} />
+                      <div className="flex-1 min-w-0 overflow-hidden">
+                        <div className="flex items-baseline justify-between mb-1 gap-2">
+                          <span className={`font-semibold text-gray-900 truncate flex-1 ${!email.read ? 'font-bold' : ''}`}>
                             {email.fromName}
                           </span>
-                          <span className="text-xs text-gray-500 ml-2 flex-shrink-0">
+                          <span className="text-xs text-gray-500 flex-shrink-0">
                             {format(new Date(email.timestamp), 'd MMM', { locale: pl })}
                           </span>
                         </div>
-                        <p className={`text-sm truncate ${!email.read ? 'font-semibold text-gray-900' : 'text-gray-700'}`}>
+                        <p className={`text-sm truncate break-words ${!email.read ? 'font-semibold text-gray-900' : 'text-gray-700'}`}>
                           {email.subject}
                         </p>
-                        <p className="text-sm text-gray-600 truncate mt-1">
-                          {email.body.substring(0, 100)}...
+                        <p className="text-xs md:text-sm text-gray-600 line-clamp-2 break-words mt-1">
+                          {email.body.replace(/<[^>]*>/g, '').substring(0, 100)}...
                         </p>
                         {email.variant && !email.isDemo && (
                           <div className="mt-2">
