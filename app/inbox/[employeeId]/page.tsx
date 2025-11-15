@@ -20,6 +20,7 @@ export default function EmployeeInboxPage() {
   const [selectedEmail, setSelectedEmail] = useState<Email | null>(null);
   const [showOriginalModal, setShowOriginalModal] = useState(false);
   const [showPreferencesModal, setShowPreferencesModal] = useState(false);
+  const [showMobileEmailView, setShowMobileEmailView] = useState(false);
   const emails = getEmployeeEmails(employeeId);
 
   // Handle clicks on links in email body
@@ -59,9 +60,14 @@ export default function EmployeeInboxPage() {
 
   const handleEmailClick = (email: Email) => {
     setSelectedEmail(email);
+    setShowMobileEmailView(true);
     if (!email.read) {
       markEmailAsRead(employeeId, email.id);
     }
+  };
+
+  const handleBackToList = () => {
+    setShowMobileEmailView(false);
   };
 
   const unreadCount = emails.filter(e => !e.read).length;
@@ -182,19 +188,19 @@ export default function EmployeeInboxPage() {
       <OriginalMessageModal />
       <PreferencesModal />
       {/* Gmail-like header */}
-      <header className="bg-white border-b border-gray-200 px-6 py-3">
+      <header className="bg-white border-b border-gray-200 px-3 md:px-6 py-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2 md:space-x-4">
             <div className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-gmail-red rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-xl">M</span>
+              <div className="w-8 h-8 md:w-10 md:h-10 bg-gmail-red rounded-full flex items-center justify-center">
+                <span className="text-white font-bold text-lg md:text-xl">M</span>
               </div>
-              <span className="text-xl text-gray-700 font-normal">Mail Demo</span>
+              <span className="text-lg md:text-xl text-gray-700 font-normal hidden sm:inline">Mail Demo</span>
             </div>
           </div>
-          <div className="flex items-center space-x-4">
-            <div className="flex items-center space-x-3">
-              <span className="text-sm text-gray-700">{employee.fullName}</span>
+          <div className="flex items-center space-x-2 md:space-x-4">
+            <div className="flex items-center space-x-2 md:space-x-3">
+              <span className="text-xs md:text-sm text-gray-700 truncate max-w-[120px] md:max-w-none">{employee.fullName}</span>
               <div className="relative w-8 h-8 rounded-full overflow-hidden bg-gray-200">
                 <Image
                   src={employee.avatarUrl}
@@ -210,8 +216,8 @@ export default function EmployeeInboxPage() {
       </header>
 
       <div className="flex h-[calc(100vh-64px)]">
-        {/* Sidebar */}
-        <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
+        {/* Sidebar - hidden on mobile */}
+        <div className="hidden md:flex md:w-64 bg-white border-r border-gray-200 flex-col">
           <div className="p-4">
             <button className="w-full flex items-center space-x-3 px-6 py-3 bg-gmail-blue text-white rounded-full hover:shadow-md transition-shadow">
               <span className="text-xl">✏️</span>
@@ -253,18 +259,32 @@ export default function EmployeeInboxPage() {
           </div>
         </div>
 
-        {/* Email list */}
+        {/* Email list and content container */}
         <div className="flex-1 flex">
-          <div className="w-1/2 bg-white border-r border-gray-200 overflow-y-auto">
+          {/* Email list - full width on mobile (hidden when email is open), half width on desktop */}
+          <div className={`${showMobileEmailView ? 'hidden md:flex' : 'flex'} w-full md:w-1/2 bg-white md:border-r border-gray-200 overflow-y-auto flex-col`}>
+            {/* Mobile: Back to employee selection */}
+            <div className="md:hidden bg-white border-b border-gray-200 px-4 py-3">
+              <Link
+                href="/inbox"
+                className="text-sm text-indigo-600 hover:text-indigo-700 flex items-center space-x-1"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+                <span>Zmień pracownika</span>
+              </Link>
+            </div>
+
             {/* Preference banner */}
-            <div className="bg-blue-50 border-b border-blue-200 p-4">
-              <div className="flex items-start space-x-3">
-                <span className="text-2xl">{variantConfig?.icon}</span>
+            <div className="bg-blue-50 border-b border-blue-200 p-3 md:p-4">
+              <div className="flex items-start space-x-2 md:space-x-3">
+                <span className="text-xl md:text-2xl">{variantConfig?.icon}</span>
                 <div className="flex-1">
-                  <h3 className="font-semibold text-blue-900">
+                  <h3 className="text-sm md:text-base font-semibold text-blue-900">
                     Twoja preferencja: {variantConfig?.name}
                   </h3>
-                  <p className="text-sm text-blue-700">
+                  <p className="text-xs md:text-sm text-blue-700">
                     {employee.description}
                   </p>
                 </div>
@@ -319,14 +339,30 @@ export default function EmployeeInboxPage() {
             </div>
           </div>
 
-          {/* Email content */}
-          <div className="flex-1 bg-white overflow-y-auto">
+          {/* Email content - full width on mobile (only when email is selected), half width on desktop */}
+          <div className={`${!showMobileEmailView && selectedEmail ? 'hidden md:flex' : showMobileEmailView ? 'flex' : 'hidden md:flex'} flex-1 bg-white overflow-y-auto flex-col`}>
             {selectedEmail ? (
-              <div className="p-8">
-                <div className="mb-6">
-                  <h1 className="text-2xl font-bold text-gray-900 mb-4">
+              <div className="flex flex-col h-full">
+                {/* Mobile back button */}
+                <div className="md:hidden sticky top-0 bg-white border-b border-gray-200 px-4 py-3 flex items-center space-x-3 z-10">
+                  <button
+                    onClick={handleBackToList}
+                    className="text-gray-700 hover:text-gray-900"
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <span className="text-sm font-semibold text-gray-900 truncate">
                     {selectedEmail.subject}
-                  </h1>
+                  </span>
+                </div>
+
+                <div className="p-4 md:p-8 flex-1 overflow-y-auto">
+                  <div className="mb-6">
+                    <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-4">
+                      {selectedEmail.subject}
+                    </h1>
                   <div className="flex items-start space-x-4 pb-4 border-b border-gray-200">
                     <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
                       {selectedEmail.fromName.charAt(0)}
@@ -382,6 +418,7 @@ export default function EmployeeInboxPage() {
                   >
                     ℹ️ Zobacz dlaczego otrzymałeś tę wersję wiadomości
                   </button>
+                </div>
                 </div>
               </div>
             ) : (
