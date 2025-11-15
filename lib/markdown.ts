@@ -7,9 +7,10 @@ export function markdownToHtml(markdown: string): string {
   let html = markdown;
 
   // Headers (### Header -> <h3>Header</h3>)
-  html = html.replace(/^### (.+)$/gm, '<h3 class="text-lg font-bold text-red-800 mt-4 mb-2 break-words">$1</h3>');
-  html = html.replace(/^## (.+)$/gm, '<h2 class="text-xl font-bold text-red-800 mt-4 mb-2 break-words">$1</h2>');
-  html = html.replace(/^# (.+)$/gm, '<h1 class="text-2xl font-bold text-red-800 mt-4 mb-2 break-words">$1</h1>');
+  // Headers are only bold and dark red, same font size as body text
+  html = html.replace(/^### (.+)$/gm, '<h3 class="font-bold text-red-800 mt-4 mb-2 break-words">$1</h3>');
+  html = html.replace(/^## (.+)$/gm, '<h2 class="font-bold text-red-800 mt-4 mb-2 break-words">$1</h2>');
+  html = html.replace(/^# (.+)$/gm, '<h1 class="font-bold text-red-800 mt-4 mb-2 break-words">$1</h1>');
 
   // Bold (**text** or __text__ -> <strong>text</strong>)
   html = html.replace(/\*\*(.+?)\*\*/g, '<strong class="font-bold text-red-800 break-words">$1</strong>');
